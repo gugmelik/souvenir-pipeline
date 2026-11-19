@@ -1,0 +1,783 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_edit_2511_fp8mixed.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Qwen-Image-Edit-2511"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load text encoder"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "4": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "shift": 3.1
+    },
+    "_meta": {
+      "title": "AuraFlow shift"
+    }
+  },
+  "5": {
+    "class_type": "CFGNorm",
+    "inputs": {
+      "model": [
+        "4",
+        0
+      ],
+      "strength": 1.0,
+      "pre_cfg": false
+    },
+    "_meta": {
+      "title": "CFGNorm"
+    }
+  },
+  "6": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "5",
+        0
+      ],
+      "lora_name": "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors",
+      "strength_model": 1.0
+    },
+    "_meta": {
+      "title": "Lightning 4-step LoRA"
+    }
+  },
+  "10": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "guest_photo.jpg"
+    },
+    "_meta": {
+      "title": "Guest photo"
+    }
+  },
+  "11": {
+    "class_type": "OccoProductSpec",
+    "inputs": {
+      "spec_path": "configs/products/slotzilla_flight_v1.json"
+    },
+    "_meta": {
+      "title": "Product spec (Slotzilla)"
+    }
+  },
+  "12": {
+    "class_type": "OccoDetectPeople",
+    "inputs": {
+      "image": [
+        "10",
+        0
+      ],
+      "detector": "insightface",
+      "min_face_ratio": 0.35,
+      "manual_faces": "",
+      "rekognition_region": "us-west-2",
+      "vlm_base_url": "",
+      "vlm_model": "Qwen/Qwen3-VL-8B-Instruct",
+      "vlm_api_key": "EMPTY"
+    },
+    "_meta": {
+      "title": "Detect people"
+    }
+  },
+  "13": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "12",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "Rider crops"
+    }
+  },
+  "14": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "12",
+        3
+      ]
+    },
+    "_meta": {
+      "title": "Person cards"
+    }
+  },
+  "15": {
+    "class_type": "OccoPlan",
+    "inputs": {
+      "spec": [
+        "11",
+        0
+      ],
+      "people": [
+        "12",
+        0
+      ],
+      "seed": 7,
+      "planner": "template",
+      "max_prompt_tokens": 120,
+      "vlm_base_url": "",
+      "vlm_model": "Qwen/Qwen3-VL-8B-Instruct",
+      "vlm_api_key": "EMPTY"
+    },
+    "_meta": {
+      "title": "Plan"
+    }
+  },
+  "16": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "15",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Plan (all prompts)"
+    }
+  },
+  "20": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 1200,
+      "height": 1600,
+      "batch_size": 1,
+      "color": 1971248
+    },
+    "_meta": {
+      "title": "Blank canvas 1200x1600"
+    }
+  },
+  "21": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": [
+        "11",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "20",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "plate: prompt"
+    }
+  },
+  "22": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": "",
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "20",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "plate: negative"
+    }
+  },
+  "23": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "21",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "plate: ref method"
+    }
+  },
+  "24": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "22",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "plate: ref method (neg)"
+    }
+  },
+  "25": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "20",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "plate: encode"
+    }
+  },
+  "26": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1001,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "23",
+        0
+      ],
+      "negative": [
+        "24",
+        0
+      ],
+      "latent_image": [
+        "25",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "plate: sample"
+    }
+  },
+  "27": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "26",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "plate: decode"
+    }
+  },
+  "28": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "27",
+        0
+      ],
+      "filename_prefix": "souvenir/plate"
+    },
+    "_meta": {
+      "title": "Save plate"
+    }
+  },
+  "30": {
+    "class_type": "OccoQwenEditRiders",
+    "inputs": {
+      "model": [
+        "6",
+        0
+      ],
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "spec": [
+        "11",
+        0
+      ],
+      "people": [
+        "12",
+        0
+      ],
+      "plan": [
+        "15",
+        0
+      ],
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "reference_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "Qwen edit riders"
+    }
+  },
+  "31": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "30",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Posed riders"
+    }
+  },
+  "32": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "30",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "Stylized riders"
+    }
+  },
+  "33": {
+    "class_type": "OccoCutout",
+    "inputs": {
+      "riders": [
+        "30",
+        0
+      ],
+      "method": "auto",
+      "white_tolerance": 38
+    },
+    "_meta": {
+      "title": "Cutout"
+    }
+  },
+  "34": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "33",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "Cutouts"
+    }
+  },
+  "35": {
+    "class_type": "OccoCompose",
+    "inputs": {
+      "spec": [
+        "11",
+        0
+      ],
+      "plan": [
+        "15",
+        0
+      ],
+      "riders": [
+        "33",
+        0
+      ],
+      "plate": [
+        "27",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Compose"
+    }
+  },
+  "36": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "35",
+        0
+      ],
+      "filename_prefix": "souvenir/composite"
+    },
+    "_meta": {
+      "title": "Save composite"
+    }
+  },
+  "41": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": [
+        "15",
+        2
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "35",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "harmonize: prompt"
+    }
+  },
+  "42": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": "",
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "35",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "harmonize: negative"
+    }
+  },
+  "43": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "41",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "harmonize: ref method"
+    }
+  },
+  "44": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "42",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "harmonize: ref method (neg)"
+    }
+  },
+  "45": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "35",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "harmonize: encode"
+    }
+  },
+  "46": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1002,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "43",
+        0
+      ],
+      "negative": [
+        "44",
+        0
+      ],
+      "latent_image": [
+        "45",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "harmonize: sample"
+    }
+  },
+  "47": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "46",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "harmonize: decode"
+    }
+  },
+  "48": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "47",
+        0
+      ],
+      "filename_prefix": "souvenir/merch"
+    },
+    "_meta": {
+      "title": "Save merch"
+    }
+  },
+  "51": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": [
+        "15",
+        3
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "47",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "effects: prompt"
+    }
+  },
+  "52": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "prompt": "",
+      "vae": [
+        "3",
+        0
+      ],
+      "image1": [
+        "47",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "effects: negative"
+    }
+  },
+  "53": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "51",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "effects: ref method"
+    }
+  },
+  "54": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "conditioning": [
+        "52",
+        0
+      ],
+      "reference_latents_method": "index_timestep_zero"
+    },
+    "_meta": {
+      "title": "effects: ref method (neg)"
+    }
+  },
+  "55": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "47",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "effects: encode"
+    }
+  },
+  "56": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1003,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "53",
+        0
+      ],
+      "negative": [
+        "54",
+        0
+      ],
+      "latent_image": [
+        "55",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "effects: sample"
+    }
+  },
+  "57": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "56",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "effects: decode"
+    }
+  },
+  "58": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "57",
+        0
+      ],
+      "filename_prefix": "souvenir/hero"
+    },
+    "_meta": {
+      "title": "Save hero"
+    }
+  },
+  "60": {
+    "class_type": "OccoVerify",
+    "inputs": {
+      "image": [
+        "57",
+        0
+      ],
+      "spec": [
+        "11",
+        0
+      ],
+      "people": [
+        "12",
+        0
+      ],
+      "layout": [
+        "35",
+        1
+      ],
+      "identity": "insightface",
+      "identity_threshold": 0.3,
+      "vlm_base_url": "",
+      "vlm_model": "Qwen/Qwen3-VL-8B-Instruct",
+      "vlm_api_key": "EMPTY"
+    },
+    "_meta": {
+      "title": "Verify hero"
+    }
+  },
+  "61": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "60",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Verify report"
+    }
+  }
+}

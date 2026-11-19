@@ -1,0 +1,126 @@
+# occo souvenir pipeline - runtime configuration.
+# ${VAR} reads an environment variable (or .env); ${VAR:-default} gives a default.
+
+# ---------------------------------------------------------------- image model
+backend:
+  kind: ${SOUVENIR_BACKEND:-gpu_instances}    # gpu_instances | genai_instance | modal_comfy | diffusers | mock
+
+  # occo gpu-instances (C:\dev\occo\gpu-instances): Qwen-Image-Edit-2511 + Lightning 4-step, up to 4 images.
+  #   mode pod:     one pod from `scripts\start.bat`; URL + key read from gpu-instances\.state.json
+  #                 (or GPU_POD_URL / GPU_POD_KEY)
+  #   mode gateway: production job API (POST /v1/jobs); PROD_URL / PROD_API_KEY from gpu-instances\.env
+  gpu_instances:
+    mode: ${GPU_INSTANCES_MODE:-pod}
+    project_dir: ${GPU_INSTANCES_DIR:-C:/dev/occo/gpu-instances}
+    url: ${GPU_POD_URL}                         # pod mode override; for gateway mode: ${PROD_URL}
+    api_key: ${GPU_POD_KEY}
+    model: qwen-image-edit-2511
+    num_inference_steps: 4                      # Lightning LoRA
+    true_cfg_scale: 1.0
+    max_images: 4                               # server MAX_NUM_IMAGES
+    max_side: 2048                              # server MAX_SIDE
+    timeout_s: 600
+    sync_wait_s: 30                             # gateway ?wait=
+
+  # Older C:\dev\genai_instance worker (40 steps, no Lightning LoRA).
+  genai_instance:
+    url: ${GENAI_QWEN_URL}                      # e.g. https://<pod-id>-8000.proxy.runpod.net
+    deployments_file: ${GENAI_DEPLOYMENTS:-C:/dev/genai_instance/.genai/deployments.json}
+    model: qwen-image-edit-2511
+    num_inference_steps: 40                     # model-card default (no Lightning LoRA in that worker)
+    true_cfg_scale: 4.0
+    timeout_s: 600
+
+  # Your C:\dev\modal\modal_comfy.py app (fp8 + Lightning 4-step). Only 2 image URLs per call,
+  # so images are uploaded to S3 first and the 3rd image of a step is dropped.
+  modal_comfy:
+    url: ${MODAL_QWEN_URL}                      # printed by: modal deploy modal_comfy.py
+    s3_bucket: ${SOUVENIR_TMP_BUCKET}
+    s3_prefix: souvenir-tmp/
+    region: us-west-2
+    width: 1200
+    height: 1600
+
+  # In-process diffusers (big GPU only).
+  diffusers:
+    model_id: Qwen/Qwen-Image-Edit-2511
+    num_inference_steps: 40
+    true_cfg_scale: 4.0
+    cpu_offload: true
+    lightning_lora:                             # set repo: null to disable
+      repo: lightx2v/Qwen-Image-Edit-2511-Lightning
+      weight_name: Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors
+      steps: 4
+      true_cfg_scale: 1.0
+
+# Single-prompt baselines for `souvenir eval --modes pipeline,single:main,single:gemini`
+baselines:
+  gemini:
+    enabled: false                              # set true + GEMINI_API_KEY to compare against Nano Banana
+    kind: gemini
+    model: ${GEMINI_IMAGE_MODEL:-gemini-2.5-flash-image}
+    api_key_env: GEMINI_API_KEY
+
+# ---------------------------------------------------------------- VLM (analyzer, planner, verifier)
+vlm:
+  kind: ${SOUVENIR_VLM:-openai}                 # openai (any OpenAI-compatible server) | mock
+  base_url: ${VLM_BASE_URL:-http://localhost:8000/v1}   # vLLM: vllm serve Qwen/Qwen3-VL-8B-Instruct
+  api_key: ${VLM_API_KEY:-EMPTY}
+  model: ${VLM_MODEL:-Qwen/Qwen3-VL-8B-Instruct}
+  temperature: 0.2
+  max_tokens: 1500
+  image_max_side: 1024
+  json_mode: true
+
+planner:
+  mode: llm                                     # llm | template (template = no LLM, fills spec templates)
+  max_prompt_tokens: 120                        # per step; far below Qwen's 512 default
+  tokenizer: null                               # e.g. Qwen/Qwen2.5-VL-7B-Instruct for exact counts (needs transformers)
+
+# ---------------------------------------------------------------- people detection
+detector:
+  kind: ${SOUVENIR_DETECTOR:-insightface}       # insightface | rekognition | mock
+  model: buffalo_l                              # InsightFace weights: NON-COMMERCIAL licence
+  ctx_id: 0                                     # -1 = CPU
+  region: us-west-2                             # rekognition (USW2 = US traffic, APS1 = Malaysia)
+  det_threshold: 0.5
+  min_face_ratio: 0.35                          # faces smaller than 35% of the largest = bystanders
+
+# ---------------------------------------------------------------- identity check
+identity:
+  kind: ${SOUVENIR_IDENTITY:-vlm_judge}         # vlm_judge | insightface | rekognition | styleid | mock
+  region: us-west-2
+  thresholds:                                   # CALIBRATE on your own photos per style (README -> Calibration)
+    vlm_judge: 0.6
+    insightface: 0.30
+    rekognition: 0.80
+    mock: 0.5
+
+# ---------------------------------------------------------------- background removal
+segmenter:
+  kind: rembg                                   # rembg | onnx_isnet | mock
+  rembg_model: isnet-general-use
+  onnx_path: null                               # your fine-tuned ISNet .onnx
+  input_size: 1024
+  mean: 0.5
+  std: 1.0
+
+ocr:
+  enabled: true
+  langs: [en]
+  gpu: false
+
+# ---------------------------------------------------------------- flow control
+retries:                                        # extra attempts (new seed) when a step fails its check
+  pose: 2
+  stylize: 2
+  harmonize: 1
+  effects: 1
+
+harmonize:
+  enabled: true
+effects:
+  enabled: true
+
+verify:
+  checklist_min_yes: 1.0                        # fraction of checklist questions that must be "yes"
