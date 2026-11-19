@@ -86,6 +86,22 @@ run `python comfyui/build_workflow.py` after changing `build_api(precision, text
 A photo with N people runs 2N + 3 Qwen edits (plate, 2 per rider, harmonize, effects): 9 for 3 people.
 Change **seed** on **Plan** (or on the core KSamplers) to try variations.
 
+## Using your own plate and style picture
+
+1. **Make the plate once:** open `workflows/plate_cleanup_bf16.json` (or `plate_cleanup.json` for fp8). Upload
+   an example souvenir you like as **Example souvenir**, then Run. It runs two short edits:
+   - remove the rider, harness, cable, speed lines and WOOO! text;
+   - fix the sign text (SLOTZILLA spelling, generic words on the other signs).
+
+   Both steps are saved (`souvenir/plate_cleanup_step1`, `souvenir/slotzilla_plate`). Check the result and
+   re-run with another seed if something is left over.
+2. **Use it:** open `workflows/occo_souvenir_slotzilla_bf16_plate.json`. It has two extra **Load Image** nodes:
+   - **Background plate**: the cleaned plate.
+   - **Style reference**: an image in the look you want for the riders, for example the original souvenir. If
+     guests start getting that rider's hair or face, use a character picture of a different person instead.
+3. **Compose** takes the canvas from the plate (`canvas = from plate`, long side 1600). A landscape plate stays
+   landscape and nothing gets cropped.
+
 ## Where it can run
 
 - **Local ComfyUI, or a ComfyUI pod you control** (RunPod / Vast instance): yes, install the nodes as above.

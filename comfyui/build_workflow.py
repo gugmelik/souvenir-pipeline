@@ -61,7 +61,8 @@ def qwen_edit(g: G, p: str, title: str, group: str, image1, prompt, seed: int, e
     return g.add(f"{p}7", "VAEDecode", f"{title}: decode", group, samples=[f"{p}6", 0], vae=["3", 0])
 
 
-def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
+def build_api(precision: str = "fp8", text_encoder: str = "fp8", plate_image: bool = False) -> G:
+    """plate_image=True: the plate comes from a LoadImage node (an approved plate) instead of being drafted."""
     g = G()
     unet = MODELS["unet_bf16"] if precision == "bf16" else MODELS["unet"]
     clip = MODELS["clip_bf16"] if text_encoder == "bf16" else MODELS["clip"]
@@ -75,7 +76,9 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
 
     I = "1. Guest photo -> people -> plan"
     g.add("10", "LoadImage", "Guest photo", I, image="guest_photo.jpg")
-    g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json")
+    g.add("18", "LoadImage", "Style reference", I, image="slotzilla_style_01.png")
+    g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
+          style_image=["18", 0])
     g.add("12", "OccoDetectPeople", "Detect people", I, image=["10", 0], detector="insightface", min_face_ratio=0.35,
           manual_faces="", rekognition_region="us-west-2", **VLM)
     g.add("13", "PreviewImage", "Rider crops", I, images=["12", 2])
@@ -83,10 +86,14 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
     g.add("15", "OccoPlan", "Plan", I, spec=["11", 0], people=["12", 0], seed=7, planner="template", max_prompt_tokens=120, **VLM)
     g.add("16", "PreviewAny", "Plan (all prompts)", I, source=["15", 1])
 
-    P = "2. Background plate (draft; replace with an approved plate via LoadImage)"
-    g.add("20", "EmptyImage", "Blank canvas 1200x1600", P, width=1200, height=1600, batch_size=1, color=0x1E1430)
-    plate = qwen_edit(g, "2", "plate", P, ["20", 0], ["11", 1], seed=1001)
-    g.add("28", "SaveImage", "Save plate", P, images=plate, filename_prefix="souvenir/plate")
+    if plate_image:
+        P = "2. Background plate (approved image, no riders)"
+        plate = g.add("20", "LoadImage", "Background plate", P, image="slotzilla_plate_01.png")
+    else:
+        P = "2. Background plate (draft; replace with an approved plate via LoadImage)"
+        g.add("20", "EmptyImage", "Blank canvas 1200x1600", P, width=1200, height=1600, batch_size=1, color=0x1E1430)
+        plate = qwen_edit(g, "2", "plate", P, ["20", 0], ["11", 1], seed=1001)
+        g.add("28", "SaveImage", "Save plate", P, images=plate, filename_prefix="souvenir/plate")
 
     R = "3. Riders: pose -> stylize (loop) -> cutout -> compose"
     g.add("30", "OccoQwenEditRiders", "Qwen edit riders", R, model=["6", 0], clip=["2", 0], vae=["3", 0], spec=["11", 0],
@@ -96,7 +103,8 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
     g.add("32", "PreviewImage", "Stylized riders", R, images=["30", 2])
     g.add("33", "OccoCutout", "Cutout", R, riders=["30", 0], method="auto", white_tolerance=38)
     g.add("34", "PreviewImage", "Cutouts", R, images=["33", 1])
-    g.add("35", "OccoCompose", "Compose", R, spec=["11", 0], plan=["15", 0], riders=["33", 0], plate=plate)
+    g.add("35", "OccoCompose", "Compose", R, spec=["11", 0], plan=["15", 0], riders=["33", 0], plate=plate,
+          canvas="from plate", long_side=1600)
     g.add("36", "SaveImage", "Save composite", R, images=["35", 0], filename_prefix="souvenir/composite")
 
     H = "4. Harmonize (merch) and effects (hero)"
@@ -109,6 +117,38 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
     g.add("60", "OccoVerify", "Verify hero", V, image=hero, spec=["11", 0], people=["12", 0], layout=["35", 1],
           identity="insightface", identity_threshold=0.30, **VLM)
     g.add("61", "PreviewAny", "Verify report", V, source=["60", 0])
+    return g
+
+
+CLEANUP_PROMPTS = [
+    "Remove the person, the harness, the zipline cable and its pulley from the image. Fill those areas with the "
+    "night sky, buildings and city lights that continue naturally behind them. Also remove the white speed lines "
+    "and the WOOO! text. Keep everything else the same: the tower, the neon signs, the Las Vegas 2026 sign, "
+    "the colors and the drawing style.",
+    "Make the vertical neon letters on the tower read SLOTZILLA, spelled S-L-O-T-Z-I-L-L-A, matching the sign at "
+    "the top. Change the text on the other shop signs to short generic words such as CASINO, OPEN and MOTEL. "
+    "Keep the drawing style, colors and everything else the same.",
+]
+
+
+def build_cleanup(precision: str = "fp8") -> G:
+    """Turn an example souvenir into a background plate: remove the rider/cable/speed lines, then fix sign text."""
+    g = G()
+    unet = MODELS["unet_bf16"] if precision == "bf16" else MODELS["unet"]
+    M = f"Models (Qwen-Image-Edit-2511 {precision} + Lightning 4-step)"
+    g.add("1", "UNETLoader", f"Load Qwen-Image-Edit-2511 ({precision})", M, unet_name=unet, weight_dtype="default")
+    g.add("2", "CLIPLoader", "Load text encoder (fp8)", M, clip_name=MODELS["clip"], type="qwen_image", device="default")
+    g.add("3", "VAELoader", "Load VAE", M, vae_name=MODELS["vae"])
+    g.add("4", "ModelSamplingAuraFlow", "AuraFlow shift", M, model=["1", 0], shift=3.1)
+    g.add("5", "CFGNorm", "CFGNorm", M, model=["4", 0], strength=1.0, pre_cfg=False)
+    g.add("6", "LoraLoaderModelOnly", "Lightning 4-step LoRA", M, model=["5", 0], lora_name=MODELS["lora"], strength_model=1.0)
+    C = "Plate cleanup: example souvenir -> empty background plate"
+    src = g.add("10", "LoadImage", "Example souvenir (with rider)", C, image="slotzilla_example_souvenir.jpg")
+    scaled = g.add("11", "ImageScaleToTotalPixels", "Scale to ~2 MP", C, image=src, upscale_method="lanczos", megapixels=2.0, resolution_steps=16)
+    step1 = qwen_edit(g, "2", "remove rider", C, scaled, CLEANUP_PROMPTS[0], seed=2001)
+    g.add("28", "SaveImage", "Save step 1 (rider removed)", C, images=step1, filename_prefix="souvenir/plate_cleanup_step1")
+    step2 = qwen_edit(g, "3", "fix sign text", C, step1, CLEANUP_PROMPTS[1], seed=2002)
+    g.add("38", "SaveImage", "Save plate (copy to assets/plates/approved/slotzilla_plate_01.png)", C, images=step2, filename_prefix="souvenir/slotzilla_plate")
     return g
 
 
@@ -236,9 +276,11 @@ def main() -> int:
     ap.add_argument("--comfy", default=None, help="running ComfyUI URL to read /object_info from (refreshes the cache)")
     ap.add_argument("--out", default=str(HERE / "workflows"))
     a = ap.parse_args()
-    variants = {"": ("fp8", "fp8"), "_bf16": ("bf16", "fp8")}
+    variants = {"": ("fp8", "fp8", False), "_bf16": ("bf16", "fp8", False),
+                "_bf16_plate": ("bf16", "fp8", True), "_plate": ("fp8", "fp8", True)}
     g = build_api()
-    classes = sorted({n["class_type"] for n in g.nodes.values()})
+    classes = sorted({n["class_type"] for gg in (g, build_api(plate_image=True), build_cleanup())
+                      for n in gg.nodes.values()})
     if a.comfy:
         info = {}
         for c in classes:
@@ -251,11 +293,16 @@ def main() -> int:
     info = json.loads(CACHE.read_text(encoding="utf-8"))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    for suffix, (precision, te) in variants.items():
-        gv = build_api(precision, te)
+    for suffix, (precision, te, plate_image) in variants.items():
+        gv = build_api(precision, te, plate_image)
         (out / f"occo_souvenir_slotzilla{suffix}_api.json").write_text(json.dumps(gv.nodes, indent=2), encoding="utf-8")
         (out / f"occo_souvenir_slotzilla{suffix}.json").write_text(json.dumps(to_ui(gv, info), indent=1), encoding="utf-8")
-        print(f"wrote occo_souvenir_slotzilla{suffix}.json (+ _api) - diffusion model {precision}, text encoder {te}")
+        print(f"wrote occo_souvenir_slotzilla{suffix}.json (+ _api) - {precision}, plate from {'image' if plate_image else 'draft'}")
+    for suffix, precision in {"": "fp8", "_bf16": "bf16"}.items():
+        gc = build_cleanup(precision)
+        (out / f"plate_cleanup{suffix}_api.json").write_text(json.dumps(gc.nodes, indent=2), encoding="utf-8")
+        (out / f"plate_cleanup{suffix}.json").write_text(json.dumps(to_ui(gc, info), indent=1), encoding="utf-8")
+        print(f"wrote plate_cleanup{suffix}.json (+ _api) - {precision}")
     return 0
 
 

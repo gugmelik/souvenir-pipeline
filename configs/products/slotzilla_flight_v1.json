@@ -1,11 +1,11 @@
 {
   "product": "slotzilla_flight_v1",
   "title": "Slotzilla zipline - I'M FLYING souvenir",
-  "notes": "Derived from briefs/slotzilla_flight_brief.md. Style is the occo house 3D-animated look (no studio names). The SLOTZILLA sign is the client's own attraction; confirm with the client that it may appear on merchandise.",
+  "notes": "Derived from briefs/slotzilla_flight_brief.md. Style reference: assets/style_refs/slotzilla_style_01.png (neon 2D cartoon, no studio names). The SLOTZILLA sign is the client's own attraction; confirm with the client that it may appear on merchandise.",
   "canvas": {"width": 1200, "height": 1600},
 
-  "style_refs": ["assets/style_refs/house_3d_animated_*.png"],
-  "style_description": "occo house 3D animated feature-film look: soft rounded shapes, expressive eyes, smooth gradients, warm cinematic lighting, clean outlines suitable for merchandise",
+  "style_refs": ["assets/style_refs/slotzilla_style_*.png"],
+  "style_description": "bold-outline 2D cartoon illustration with cel shading, expressive faces with big eyes, saturated neon purple, pink and gold night palette, clean lines suitable for merchandise",
 
   "background_plates": ["assets/plates/approved/slotzilla_*.png"],
   "plate_prompt": "A night scene in the illustration style of image 1, seen from high above a glowing pedestrian street in downtown Las Vegas. On the upper left stands a tall zipline launch tower with a glowing neon SLOTZILLA sign and lucky 777 lights. Far below, a long LED canopy streaks with purple, pink and gold light, with vintage neon signs and small palm trees for scale. A large neon sign reads 'Las Vegas 2026'. Empty zipline cables run from the upper left to the lower right across an open night sky. Portrait 3:4.",
@@ -37,7 +37,7 @@
 
   "templates": {
     "pose": "Show the person from image 1 lying horizontally in a zipline harness, flying face down and forward, in the body pose of image 2: {arms}, legs extended behind with knees slightly bent. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
-    "stylize": "Redraw the person from image 1 as a full-body 3D animated character in the illustration style of image 2, keeping the same flying pose. Keep the face of image 3 clearly recognizable, the same {clothing}, and {hair}. {expression}. Plain light background.",
+    "stylize": "Redraw the person from image 1 as a full-body cartoon character in the illustration style of image 2, with bold outlines and cel shading, keeping the same flying pose. Keep the face of image 3 clearly recognizable, the same {clothing}, and {hair}. {expression}. Plain light background.",
     "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. Keep every rider's face, pose and clothing the same.",
     "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. Keep the riders and their faces sharp and the same.",
     "pose_check_question": "Is the person lying horizontally, face down and forward, in a flying pose?"

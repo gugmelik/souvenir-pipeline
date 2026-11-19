@@ -56,6 +56,12 @@ if [[ $FACE == 1 ]]; then
 fi
 if [[ $REMBG == 1 ]]; then "$PY" -m pip install rembg || echo "WARNING: rembg failed; cutout falls back to white_key"; fi
 
+# 2b) style references and approved plates -> ComfyUI/input, so the workflow's Load Image nodes find them
+mkdir -p "$COMFY/input"
+for f in "$REPO"/assets/style_refs/*.png "$REPO"/assets/plates/approved/*.png; do
+  [[ -f "$f" ]] && cp "$f" "$COMFY/input/" && echo "input: $(basename "$f")"
+done
+
 # 3) model files (names must match the workflow)
 dl() {  # repo, path in repo, target folder
   local dest="$COMFY/models/$3/$(basename "$2")"

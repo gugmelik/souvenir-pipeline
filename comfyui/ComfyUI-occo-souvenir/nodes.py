@@ -386,21 +386,33 @@ class OccoCutout:
 class OccoCompose:
     @classmethod
     def INPUT_TYPES(cls):
-        return {"required": {"spec": ("OCCO_SPEC",), "plan": ("OCCO_PLAN",), "riders": ("OCCO_RIDERS",), "plate": ("IMAGE",)}}
+        return {"required": {
+            "spec": ("OCCO_SPEC",), "plan": ("OCCO_PLAN",), "riders": ("OCCO_RIDERS",), "plate": ("IMAGE",),
+            "canvas": (["from plate", "from spec"], {"default": "from plate",
+                       "tooltip": "from plate: keep the plate's aspect ratio (long side = long_side). from spec: the spec's canvas, center-cropped."}),
+            "long_side": ("INT", {"default": 1600, "min": 512, "max": 4096, "step": 16}),
+        }}
 
     RETURN_TYPES = ("IMAGE", "OCCO_LAYOUT")
     RETURN_NAMES = ("composite", "layout")
     FUNCTION = "run"
     CATEGORY = CATEGORY
 
-    def run(self, spec, plan, riders, plate):
+    def run(self, spec, plan, riders, plate, canvas="from plate", long_side=1600):
+        from souvenir.schemas import Canvas
+
         s = spec["spec"]
+        size = s.canvas
+        if canvas == "from plate":
+            ph, pw = int(plate.shape[1]), int(plate.shape[2])
+            k = long_side / max(pw, ph)
+            size = Canvas(width=max(16, round(pw * k / 16) * 16), height=max(16, round(ph * k / 16) * 16))
         cutouts = {r["id"]: r["cutout"] for r in riders}
         missing = [pid for pid in plan.slots if pid not in cutouts]
         if missing:
             raise ValueError(f"Occo Compose: riders {missing} have no cutout (connect Occo Cutout first)")
-        img, boxes = compose(t2p(plate), cutouts, plan.slots, s.canvas, s.cable_direction, s.cable_angle_deg)
-        return (p2t(img), {"boxes": boxes, "canvas": (s.canvas.width, s.canvas.height)})
+        img, boxes = compose(t2p(plate), cutouts, plan.slots, size, s.cable_direction, s.cable_angle_deg)
+        return (p2t(img), {"boxes": boxes, "canvas": (size.width, size.height)})
 
 
 # --------------------------------------------------------------------------- verify

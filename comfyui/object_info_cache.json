@@ -277,6 +277,83 @@
   "essentials_category": null,
   "has_intermediate_output": false
  },
+ "ImageScaleToTotalPixels": {
+  "input": {
+   "required": {
+    "image": [
+     "IMAGE",
+     {}
+    ],
+    "upscale_method": [
+     "COMBO",
+     {
+      "multiselect": false,
+      "options": [
+       "nearest-exact",
+       "bilinear",
+       "area",
+       "bicubic",
+       "lanczos"
+      ]
+     }
+    ],
+    "megapixels": [
+     "FLOAT",
+     {
+      "default": 1.0,
+      "min": 0.01,
+      "max": 16.0,
+      "step": 0.01
+     }
+    ],
+    "resolution_steps": [
+     "INT",
+     {
+      "advanced": true,
+      "default": 1,
+      "min": 1,
+      "max": 256
+     }
+    ]
+   }
+  },
+  "input_order": {
+   "required": [
+    "image",
+    "upscale_method",
+    "megapixels",
+    "resolution_steps"
+   ]
+  },
+  "is_input_list": false,
+  "output": [
+   "IMAGE"
+  ],
+  "output_is_list": [
+   false
+  ],
+  "output_name": [
+   "IMAGE"
+  ],
+  "output_tooltips": [
+   null
+  ],
+  "output_matchtypes": null,
+  "name": "ImageScaleToTotalPixels",
+  "display_name": "Scale Image to Total Pixels",
+  "description": "",
+  "python_module": "comfy_extras.nodes_post_processing",
+  "category": "image/upscaling",
+  "output_node": false,
+  "deprecated": false,
+  "experimental": false,
+  "dev_only": false,
+  "api_node": false,
+  "price_badge": null,
+  "search_aliases": null,
+  "essentials_category": null,
+  "has_intermediate_output": false
+ },
  "KSampler": {
   "input": {
    "required": {
@@ -464,7 +541,12 @@
     "image": [
      [
       "example.png",
-      "guest_photo.jpg"
+      "guest_photo.jpg",
+      "slotzilla_example_souvenir.jpg",
+      "slotzilla_plate.png",
+      "slotzilla_plate_01.png",
+      "slotzilla_style.png",
+      "slotzilla_style_01.png"
      ],
      {
       "image_upload": true
@@ -638,6 +720,25 @@
     ],
     "plate": [
      "IMAGE"
+    ],
+    "canvas": [
+     [
+      "from plate",
+      "from spec"
+     ],
+     {
+      "default": "from plate",
+      "tooltip": "from plate: keep the plate's aspect ratio (long side = long_side). from spec: the spec's canvas, center-cropped."
+     }
+    ],
+    "long_side": [
+     "INT",
+     {
+      "default": 1600,
+      "min": 512,
+      "max": 4096,
+      "step": 16
+     }
     ]
    }
   },
@@ -646,7 +747,9 @@
     "spec",
     "plan",
     "riders",
-    "plate"
+    "plate",
+    "canvas",
+    "long_side"
    ]
   },
   "is_input_list": false,
@@ -1467,6 +1570,7 @@
    "required": {
     "unet_name": [
      [
+      "qwen_image_edit_2511_bf16.safetensors",
       "qwen_image_edit_2511_fp8mixed.safetensors"
      ]
     ],

@@ -79,10 +79,23 @@
       "title": "Guest photo"
     }
   },
+  "18": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "slotzilla_style_01.png"
+    },
+    "_meta": {
+      "title": "Style reference"
+    }
+  },
   "11": {
     "class_type": "OccoProductSpec",
     "inputs": {
-      "spec_path": "configs/products/slotzilla_flight_v1.json"
+      "spec_path": "configs/products/slotzilla_flight_v1.json",
+      "style_image": [
+        "18",
+        0
+      ]
     },
     "_meta": {
       "title": "Product spec (Slotzilla)"
@@ -428,7 +441,9 @@
       "plate": [
         "27",
         0
-      ]
+      ],
+      "canvas": "from plate",
+      "long_side": 1600
     },
     "_meta": {
       "title": "Compose"
