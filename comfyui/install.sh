@@ -31,7 +31,11 @@ if [[ -L "$LINK" || -e "$LINK" ]]; then echo "already present: $LINK"; else ln -
 
 # 2) Python packages into ComfyUI's environment
 "$PY" -m pip install "pydantic>=2.5" pyyaml scipy requests openai
-if [[ $FACE == 1 ]]; then "$PY" -m pip install insightface onnxruntime-gpu || "$PY" -m pip install insightface onnxruntime; fi
+if [[ $FACE == 1 ]]; then
+  # insightface compiles a small C extension; RunPod images run as root, so install a compiler if missing
+  if ! command -v g++ >/dev/null && command -v apt-get >/dev/null; then apt-get update -qq && apt-get install -y -qq build-essential python3-dev; fi
+  "$PY" -m pip install insightface onnxruntime-gpu || "$PY" -m pip install insightface onnxruntime
+fi
 if [[ $REMBG == 1 ]]; then "$PY" -m pip install rembg; fi
 
 # 3) model files (names must match the workflow)
@@ -39,8 +43,8 @@ dl() {  # repo, path in repo, target folder
   local dest="$COMFY/models/$3/$(basename "$2")"
   if [[ -f "$dest" ]]; then echo "ok        $dest"; return; fi
   "$PY" -m pip install -q -U huggingface_hub
-  local tmp; tmp="$(mktemp -d)"
-  hf download "$1" "$2" --local-dir "$tmp"
+  local tmp; tmp="$(mktemp -d -p "$COMFY/models")"   # same disk as the target, so mv is instant
+  "$PY" -c "import sys; from huggingface_hub import hf_hub_download; hf_hub_download(sys.argv[1], sys.argv[2], local_dir=sys.argv[3])" "$1" "$2" "$tmp"
   mkdir -p "$COMFY/models/$3" && mv "$tmp/$2" "$dest" && rm -rf "$tmp"
   echo "downloaded $dest"
 }
