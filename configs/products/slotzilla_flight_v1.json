@@ -60,8 +60,8 @@
   "templates": {
     "pose": "Show exactly one person: the person from image 1, lying horizontally in a zipline harness, flying face down and forward. Image 2 is only a pose diagram; copy its body position: {arms}, legs extended behind with knees slightly bent. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
     "stylize": "Redraw the person from image 1 as a full-body cartoon character, using only the drawing style of image 2: bold outlines, cel shading, expressive eyes. Show exactly one person: the person from image 1, with the same face, {clothing}, and {hair}, in the same flying pose. {expression}. Plain light background.",
-    "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. Keep every rider's face, pose and clothing the same.",
-    "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. Keep the riders and their faces sharp and the same.",
+    "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. The image shows exactly {riders}, the only {people} in the picture; keep every rider's face, pose and clothing the same.",
+    "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. The image shows exactly {riders}, the only {people} in the picture; keep them and their faces sharp and the same.",
     "pose_check_question": "Is the person lying horizontally, face down and forward, in a flying pose?"
   },
   "required_text": [

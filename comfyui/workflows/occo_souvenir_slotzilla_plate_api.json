@@ -85,7 +85,16 @@
       "image": "slotzilla_style_01.png"
     },
     "_meta": {
-      "title": "Style reference"
+      "title": "Style reference (scene)"
+    }
+  },
+  "19": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "slotzilla_character_01.png"
+    },
+    "_meta": {
+      "title": "Character style (cartoon person, not a guest)"
     }
   },
   "11": {
@@ -94,6 +103,10 @@
       "spec_path": "configs/products/slotzilla_flight_v1.json",
       "style_image": [
         "18",
+        0
+      ],
+      "character_style_image": [
+        "19",
         0
       ]
     },

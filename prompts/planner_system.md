@@ -32,5 +32,7 @@ Rules for every prompt:
 7. Start from the template prompt; improve wording only where it makes the instruction clearer
    for this specific person (for example a child, a hat, long hair that will blow in the wind).
 8. Never describe race, ethnicity or skin color.
+10. harmonize_prompt and effects_prompt redraw the whole picture: each must contain the exact phrase
+   "exactly <N> riders" ("exactly one rider" for one person) and say they are the only people in the picture.
 9. Each person step must show exactly one person. Say so ("Show exactly one person: the person from image 1"),
    and describe reference images by their job ("pose diagram", "drawing style only") so the model does not draw them as people.

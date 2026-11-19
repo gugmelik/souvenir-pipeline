@@ -76,9 +76,14 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8", plate_image: bo
 
     I = "1. Guest photo -> people -> plan"
     g.add("10", "LoadImage", "Guest photo", I, image="guest_photo.jpg")
-    g.add("18", "LoadImage", "Style reference", I, image="slotzilla_style_01.png")
-    g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
-          style_image=["18", 0])
+    g.add("18", "LoadImage", "Style reference (scene)", I, image="slotzilla_style_01.png")
+    if plate_image:
+        g.add("19", "LoadImage", "Character style (cartoon person, not a guest)", I, image="slotzilla_character_01.png")
+        g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
+              style_image=["18", 0], character_style_image=["19", 0])
+    else:
+        g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
+              style_image=["18", 0])
     g.add("12", "OccoDetectPeople", "Detect people", I, image=["10", 0], detector="insightface", min_face_ratio=0.35,
           manual_faces="", rekognition_region="us-west-2", **VLM)
     g.add("13", "PreviewImage", "Rider crops", I, images=["12", 2])
@@ -121,9 +126,9 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8", plate_image: bo
 
 
 CLEANUP_PROMPTS = [
-    "Remove the person, the harness, the zipline cable and its pulley from the image. Fill those areas with the "
-    "night sky, buildings and city lights that continue naturally behind them. Also remove the white speed lines "
-    "and the WOOO! text. Keep everything else the same: the tower, the neon signs, the Las Vegas 2026 sign, "
+    "Remove the person, the harness, the zipline cable and its pulley from the image, and every pedestrian and crowd "
+    "on the street below, leaving an empty street. Fill those areas with the night sky, buildings, pavement and city "
+    "lights that continue naturally behind them. Also remove the white speed lines and the WOOO! text. Keep everything else the same: the tower, the neon signs, the Las Vegas 2026 sign, "
     "the colors and the drawing style.",
     "Make the vertical neon letters on the tower read SLOTZILLA, spelled S-L-O-T-Z-I-L-L-A, matching the sign at "
     "the top. Change the text on the other shop signs to short generic words such as CASINO, OPEN and MOTEL. "

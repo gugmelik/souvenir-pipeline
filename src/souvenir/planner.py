@@ -61,8 +61,14 @@ def _accessories_clause(card: PersonCard) -> str:
     return "Keep the " + ", ".join(card.accessories) + "."
 
 
-def fill(template: str, card: PersonCard | None = None, arms: str = "", expression: str = "") -> str:
+def riders_phrase(n: int) -> str:
+    return "one rider" if n == 1 else f"{n} riders"
+
+
+def fill(template: str, card: PersonCard | None = None, arms: str = "", expression: str = "", n_people: int = 0) -> str:
     values = {
+        "riders": riders_phrase(n_people) if n_people else "the riders",
+        "people": "person" if n_people == 1 else "people",
         "clothing": (card.clothing if card and card.clothing else "the same outfit"),
         "hair": (card.hair if card and card.hair else "the same hairstyle"),
         "accessories": _accessories_clause(card) if card else "",
@@ -120,8 +126,8 @@ def _skeleton(spec: ProductSpec, analysis: Analysis, seed: int) -> Plan:
         planner="template",
         per_person=per_person,
         slots=slots,
-        harmonize=Step(op="harmonize", inputs=["composite"], prompt=fill(spec.templates.harmonize), seed=seed + 7),
-        effects=Step(op="effects", inputs=["merch"], prompt=fill(spec.templates.effects), seed=seed + 8),
+        harmonize=Step(op="harmonize", inputs=["composite"], prompt=fill(spec.templates.harmonize, n_people=n), seed=seed + 7),
+        effects=Step(op="effects", inputs=["merch"], prompt=fill(spec.templates.effects, n_people=n), seed=seed + 8),
         checks=["rider_count", "identity_per_rider", "vlm_checklist", "ocr_text"],
         warnings=warnings,
     )
@@ -209,8 +215,12 @@ class LLMPlanner:
                 p = prompt_problems(str(entry.get(key, "")), spec, self.max_prompt_tokens, self.tokenizer)
                 if p:
                     problems[f"person {pp.id} {key}"] = p
+        phrase = riders_phrase(plan.n_people)
         for key in ("harmonize_prompt", "effects_prompt"):
-            p = prompt_problems(str(reply.get(key, "")), spec, self.max_prompt_tokens, self.tokenizer)
+            text = str(reply.get(key, ""))
+            p = prompt_problems(text, spec, self.max_prompt_tokens, self.tokenizer)
+            if phrase not in text:
+                p.append(f"must say the image shows exactly {phrase} (whole-picture passes otherwise add people)")
             if p:
                 problems[key] = p
         return problems

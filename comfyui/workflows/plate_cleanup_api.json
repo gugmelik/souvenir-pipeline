@@ -101,7 +101,7 @@
         "2",
         0
       ],
-      "prompt": "Remove the person, the harness, the zipline cable and its pulley from the image. Fill those areas with the night sky, buildings and city lights that continue naturally behind them. Also remove the white speed lines and the WOOO! text. Keep everything else the same: the tower, the neon signs, the Las Vegas 2026 sign, the colors and the drawing style.",
+      "prompt": "Remove the person, the harness, the zipline cable and its pulley from the image, and every pedestrian and crowd on the street below, leaving an empty street. Fill those areas with the night sky, buildings, pavement and city lights that continue naturally behind them. Also remove the white speed lines and the WOOO! text. Keep everything else the same: the tower, the neon signs, the Las Vegas 2026 sign, the colors and the drawing style.",
       "vae": [
         "3",
         0
