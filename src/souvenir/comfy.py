@@ -97,7 +97,8 @@ def where(slot: Slot) -> str:
 def _without_style_image(prompt: str, style_description: str) -> str:
     """Rewrite a stylize prompt for [posed, face] inputs when no style reference image exists."""
     style = style_description or "cartoon style"
-    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", prompt)
+    p = re.sub(r"Take only colors and lighting from image 2\. ", "", prompt)
+    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", p)
     p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", p)
     return p.replace("image 3", "image 2")
 

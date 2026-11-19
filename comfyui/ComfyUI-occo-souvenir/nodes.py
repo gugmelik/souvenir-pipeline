@@ -195,7 +195,7 @@ class OccoPlan:
                 "people": ("OCCO_PEOPLE",),
                 "seed": ("INT", {"default": 7, "min": 0, "max": 2**31 - 1, "control_after_generate": True}),
                 "planner": (["template", "llm"], {"default": "template", "tooltip": "llm needs the VLM endpoint below"}),
-                "max_prompt_tokens": ("INT", {"default": 120, "min": 40, "max": 1000}),
+                "max_prompt_tokens": ("INT", {"default": 180, "min": 40, "max": 1000}),
             },
             "optional": dict(VLM_INPUTS),
         }
@@ -270,7 +270,8 @@ def qwen_edit(model, clip, vae, images: list[torch.Tensor], prompt: str, seed: i
 
 def _without_style_image(prompt: str, style_description: str) -> str:
     style = style_description or "cartoon style"
-    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", prompt)
+    p = re.sub(r"Take only colors and lighting from image 2\. ", "", prompt)
+    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", p)
     p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", p)
     return p.replace("image 3", "image 2")
 

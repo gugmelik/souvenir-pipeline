@@ -65,8 +65,10 @@ def riders_phrase(n: int) -> str:
     return "one rider" if n == 1 else f"{n} riders"
 
 
-def fill(template: str, card: PersonCard | None = None, arms: str = "", expression: str = "", n_people: int = 0) -> str:
+def fill(template: str, card: PersonCard | None = None, arms: str = "", expression: str = "", n_people: int = 0,
+         character_style: str = "") -> str:
     values = {
+        "character_style": character_style or "bold outlines and cel shading",
         "riders": riders_phrase(n_people) if n_people else "the riders",
         "people": "person" if n_people == 1 else "people",
         "clothing": (card.clothing if card and card.clothing else "the same outfit"),
@@ -107,7 +109,7 @@ def _skeleton(spec: ProductSpec, analysis: Analysis, seed: int) -> Plan:
                 expression=expression,
                 steps=[
                     Step(op="pose", inputs=["body_crop", "pose_ref"], prompt=fill(spec.templates.pose, card, arms, expression), seed=base + 1),
-                    Step(op="stylize", inputs=["prev", "style_ref"], prompt=fill(spec.templates.stylize, card, arms, expression), seed=base + 2),
+                    Step(op="stylize", inputs=["prev", "style_ref"], prompt=fill(spec.templates.stylize, card, arms, expression, character_style=spec.character_style_description), seed=base + 2),
                     Step(op="cutout", inputs=["prev"]),
                 ],
             )
@@ -141,7 +143,7 @@ def template_plan(spec: ProductSpec, analysis: Analysis, seed: int = 0) -> Plan:
 
 
 class LLMPlanner:
-    def __init__(self, vlm: VLM, max_prompt_tokens: int = 120, tokenizer: str | None = None, attempts: int = 2):
+    def __init__(self, vlm: VLM, max_prompt_tokens: int = 180, tokenizer: str | None = None, attempts: int = 2):
         self.vlm = vlm
         self.max_prompt_tokens = max_prompt_tokens
         self.tokenizer = tokenizer
@@ -159,7 +161,8 @@ class LLMPlanner:
                     "expression": pp.expression,
                     "pose_step_images": {"image 1": "photo crop of this person", "image 2": "pose reference drawing"},
                     "stylize_step_images": {"image 1": "result of the pose step (the only person to draw)",
-                                            "image 2": "style reference: copy its drawing style only, never add its people"},
+                                            "image 2": "scene picture: take only colors and lighting from it"},
+                    "character_style": spec.character_style_description,
                     "template_pose": pp.steps[0].prompt,
                     "template_stylize": pp.steps[1].prompt,
                 }
@@ -246,7 +249,7 @@ class LLMPlanner:
 
 def make_plan(
     spec: ProductSpec, analysis: Analysis, vlm: VLM, mode: str = "llm", seed: int = 0,
-    max_prompt_tokens: int = 120, tokenizer: str | None = None,
+    max_prompt_tokens: int = 180, tokenizer: str | None = None,
 ) -> Plan:
     if mode == "template":
         return template_plan(spec, analysis, seed)

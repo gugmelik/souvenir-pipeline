@@ -970,7 +970,7 @@
     "max_prompt_tokens": [
      "INT",
      {
-      "default": 120,
+      "default": 180,
       "min": 40,
       "max": 1000
      }

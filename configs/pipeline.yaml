@@ -74,7 +74,7 @@ vlm:
 
 planner:
   mode: llm                                     # llm | template (template = no LLM, fills spec templates)
-  max_prompt_tokens: 120                        # per step; far below Qwen's 512 default
+  max_prompt_tokens: 180                        # per step; well below Qwen's 512 default
   tokenizer: null                               # e.g. Qwen/Qwen2.5-VL-7B-Instruct for exact counts (needs transformers)
 
 # ---------------------------------------------------------------- people detection

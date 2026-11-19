@@ -60,9 +60,9 @@ def test_template_plan_prompts_are_short_and_clean():
     for pp in plan.per_person:
         for step in pp.steps[:2]:
             assert "red shirt" in step.prompt  # clothing quoted from the card
-            assert prompt_problems(step.prompt, spec, 120) == [], step.prompt
+            assert prompt_problems(step.prompt, spec, 180) == [], step.prompt
     for step in (plan.harmonize, plan.effects):
-        assert prompt_problems(step.prompt, spec, 120) == [], step.prompt
+        assert prompt_problems(step.prompt, spec, 180) == [], step.prompt
 
 
 def test_prompt_problems_catches_brands_negations_and_length():

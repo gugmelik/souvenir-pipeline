@@ -85,6 +85,7 @@ class ProductSpec(BaseModel):
     style_refs: list[str]  # scene / overall style (plate, fallback for riders)
     character_style_refs: list[str] = Field(default_factory=list)  # a cartoon sample person: how riders are drawn
     style_description: str = ""
+    character_style_description: str = ""  # how riders are drawn, in words (used as {character_style})
     background_plates: list[str]  # paths or globs, e.g. "assets/plates/approved/slotzilla_*.png"
     plate_prompt: str = ""  # used by `souvenir plates` to draft background candidates
     pose_refs: dict[str, str]

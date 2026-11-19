@@ -88,25 +88,12 @@
       "title": "Style reference (scene)"
     }
   },
-  "19": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "slotzilla_character_01.png"
-    },
-    "_meta": {
-      "title": "Character style (cartoon person, not a guest)"
-    }
-  },
   "11": {
     "class_type": "OccoProductSpec",
     "inputs": {
       "spec_path": "configs/products/slotzilla_flight_v1.json",
       "style_image": [
         "18",
-        0
-      ],
-      "character_style_image": [
-        "19",
         0
       ]
     },
@@ -170,7 +157,7 @@
       ],
       "seed": 7,
       "planner": "template",
-      "max_prompt_tokens": 120,
+      "max_prompt_tokens": 180,
       "vlm_base_url": "",
       "vlm_model": "Qwen/Qwen3-VL-8B-Instruct",
       "vlm_api_key": "EMPTY"

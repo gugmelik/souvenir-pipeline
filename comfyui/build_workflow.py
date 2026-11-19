@@ -77,18 +77,13 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8", plate_image: bo
     I = "1. Guest photo -> people -> plan"
     g.add("10", "LoadImage", "Guest photo", I, image="guest_photo.jpg")
     g.add("18", "LoadImage", "Style reference (scene)", I, image="slotzilla_style_01.png")
-    if plate_image:
-        g.add("19", "LoadImage", "Character style (cartoon person, not a guest)", I, image="slotzilla_character_01.png")
-        g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
-              style_image=["18", 0], character_style_image=["19", 0])
-    else:
-        g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
-              style_image=["18", 0])
+    g.add("11", "OccoProductSpec", "Product spec (Slotzilla)", I, spec_path="configs/products/slotzilla_flight_v1.json",
+          style_image=["18", 0])
     g.add("12", "OccoDetectPeople", "Detect people", I, image=["10", 0], detector="insightface", min_face_ratio=0.35,
           manual_faces="", rekognition_region="us-west-2", **VLM)
     g.add("13", "PreviewImage", "Rider crops", I, images=["12", 2])
     g.add("14", "PreviewAny", "Person cards", I, source=["12", 3])
-    g.add("15", "OccoPlan", "Plan", I, spec=["11", 0], people=["12", 0], seed=7, planner="template", max_prompt_tokens=120, **VLM)
+    g.add("15", "OccoPlan", "Plan", I, spec=["11", 0], people=["12", 0], seed=7, planner="template", max_prompt_tokens=180, **VLM)
     g.add("16", "PreviewAny", "Plan (all prompts)", I, source=["15", 1])
 
     if plate_image:

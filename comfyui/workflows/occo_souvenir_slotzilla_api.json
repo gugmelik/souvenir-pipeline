@@ -157,7 +157,7 @@
       ],
       "seed": 7,
       "planner": "template",
-      "max_prompt_tokens": 120,
+      "max_prompt_tokens": 180,
       "vlm_base_url": "",
       "vlm_model": "Qwen/Qwen3-VL-8B-Instruct",
       "vlm_api_key": "EMPTY"

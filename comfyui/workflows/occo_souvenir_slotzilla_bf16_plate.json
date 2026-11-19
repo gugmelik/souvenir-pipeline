@@ -1,6 +1,6 @@
 {
- "last_node_id": 41,
- "last_link_id": 67,
+ "last_node_id": 40,
+ "last_link_id": 66,
  "nodes": [
   {
    "id": 1,
@@ -57,11 +57,11 @@
      "name": "CLIP",
      "type": "CLIP",
      "links": [
-      13,
-      27,
-      31,
-      45,
-      49
+      12,
+      26,
+      30,
+      44,
+      48
      ],
      "slot_index": 0
     }
@@ -96,15 +96,15 @@
      "name": "VAE",
      "type": "VAE",
      "links": [
-      14,
-      29,
-      32,
-      37,
-      43,
-      47,
-      50,
-      55,
-      61
+      13,
+      28,
+      31,
+      36,
+      42,
+      46,
+      49,
+      54,
+      60
      ],
      "slot_index": 0
     }
@@ -129,7 +129,7 @@
     150
    ],
    "flags": {},
-   "order": 7,
+   "order": 6,
    "mode": 0,
    "inputs": [
     {
@@ -169,7 +169,7 @@
     150
    ],
    "flags": {},
-   "order": 10,
+   "order": 9,
    "mode": 0,
    "inputs": [
     {
@@ -209,7 +209,7 @@
     150
    ],
    "flags": {},
-   "order": 14,
+   "order": 13,
    "mode": 0,
    "inputs": [
     {
@@ -223,9 +223,9 @@
      "name": "MODEL",
      "type": "MODEL",
      "links": [
-      12,
-      38,
-      56
+      11,
+      37,
+      55
      ],
      "slot_index": 0
     }
@@ -259,7 +259,7 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      6
+      5
      ],
      "slot_index": 0
     },
@@ -320,46 +320,6 @@
   },
   {
    "id": 9,
-   "type": "LoadImage",
-   "title": "Character style (cartoon person, not a guest)",
-   "pos": [
-    60,
-    1110
-   ],
-   "size": [
-    420,
-    126
-   ],
-   "flags": {},
-   "order": 5,
-   "mode": 0,
-   "inputs": [],
-   "outputs": [
-    {
-     "name": "IMAGE",
-     "type": "IMAGE",
-     "links": [
-      5
-     ],
-     "slot_index": 0
-    },
-    {
-     "name": "MASK",
-     "type": "MASK",
-     "links": [],
-     "slot_index": 1
-    }
-   ],
-   "properties": {
-    "Node name for S&R": "LoadImage"
-   },
-   "widgets_values": [
-    "slotzilla_character_01.png",
-    "image"
-   ]
-  },
-  {
-   "id": 10,
    "type": "OccoProductSpec",
    "title": "Product spec (Slotzilla)",
    "pos": [
@@ -371,7 +331,7 @@
     146
    ],
    "flags": {},
-   "order": 8,
+   "order": 7,
    "mode": 0,
    "inputs": [
     {
@@ -382,7 +342,8 @@
     {
      "name": "character_style_image",
      "type": "IMAGE",
-     "link": 5
+     "link": null,
+     "shape": 7
     }
    ],
    "outputs": [
@@ -390,10 +351,10 @@
      "name": "spec",
      "type": "OCCO_SPEC",
      "links": [
-      9,
-      15,
-      22,
-      64
+      8,
+      14,
+      21,
+      63
      ],
      "slot_index": 0
     },
@@ -412,7 +373,7 @@
    ]
   },
   {
-   "id": 11,
+   "id": 10,
    "type": "OccoDetectPeople",
    "title": "Detect people",
    "pos": [
@@ -424,13 +385,13 @@
     370
    ],
    "flags": {},
-   "order": 9,
+   "order": 8,
    "mode": 0,
    "inputs": [
     {
      "name": "image",
      "type": "IMAGE",
-     "link": 6
+     "link": 5
     }
    ],
    "outputs": [
@@ -438,9 +399,9 @@
      "name": "people",
      "type": "OCCO_PEOPLE",
      "links": [
-      10,
-      16,
-      65
+      9,
+      15,
+      64
      ],
      "slot_index": 0
     },
@@ -454,7 +415,7 @@
      "name": "crops_preview",
      "type": "IMAGE",
      "links": [
-      7
+      6
      ],
      "slot_index": 2
     },
@@ -462,7 +423,7 @@
      "name": "person_cards",
      "type": "STRING",
      "links": [
-      8
+      7
      ],
      "slot_index": 3
     }
@@ -481,7 +442,7 @@
    ]
   },
   {
-   "id": 12,
+   "id": 11,
    "type": "PreviewImage",
    "title": "Rider crops",
    "pos": [
@@ -493,13 +454,13 @@
     420
    ],
    "flags": {},
-   "order": 11,
+   "order": 10,
    "mode": 0,
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 7
+     "link": 6
     }
    ],
    "outputs": [
@@ -516,7 +477,7 @@
    "widgets_values": []
   },
   {
-   "id": 13,
+   "id": 12,
    "type": "PreviewAny",
    "title": "Person cards",
    "pos": [
@@ -528,13 +489,13 @@
     420
    ],
    "flags": {},
-   "order": 12,
+   "order": 11,
    "mode": 0,
    "inputs": [
     {
      "name": "source",
      "type": "*",
-     "link": 8
+     "link": 7
     }
    ],
    "outputs": [
@@ -551,7 +512,7 @@
    "widgets_values": []
   },
   {
-   "id": 14,
+   "id": 13,
    "type": "OccoPlan",
    "title": "Plan",
    "pos": [
@@ -563,18 +524,18 @@
     394
    ],
    "flags": {},
-   "order": 13,
+   "order": 12,
    "mode": 0,
    "inputs": [
     {
      "name": "spec",
      "type": "OCCO_SPEC",
-     "link": 9
+     "link": 8
     },
     {
      "name": "people",
      "type": "OCCO_PEOPLE",
-     "link": 10
+     "link": 9
     }
    ],
    "outputs": [
@@ -582,8 +543,8 @@
      "name": "plan",
      "type": "OCCO_PLAN",
      "links": [
-      17,
-      23
+      16,
+      22
      ],
      "slot_index": 0
     },
@@ -591,7 +552,7 @@
      "name": "plan_text",
      "type": "STRING",
      "links": [
-      11
+      10
      ],
      "slot_index": 1
     },
@@ -599,7 +560,7 @@
      "name": "harmonize_prompt",
      "type": "STRING",
      "links": [
-      28
+      27
      ],
      "slot_index": 2
     },
@@ -607,7 +568,7 @@
      "name": "effects_prompt",
      "type": "STRING",
      "links": [
-      46
+      45
      ],
      "slot_index": 3
     }
@@ -619,14 +580,14 @@
     7,
     "fixed",
     "template",
-    120,
+    180,
     "",
     "Qwen/Qwen3-VL-8B-Instruct",
     "EMPTY"
    ]
   },
   {
-   "id": 15,
+   "id": 14,
    "type": "PreviewAny",
    "title": "Plan (all prompts)",
    "pos": [
@@ -638,13 +599,13 @@
     420
    ],
    "flags": {},
-   "order": 15,
+   "order": 14,
    "mode": 0,
    "inputs": [
     {
      "name": "source",
      "type": "*",
-     "link": 11
+     "link": 10
     }
    ],
    "outputs": [
@@ -661,7 +622,7 @@
    "widgets_values": []
   },
   {
-   "id": 16,
+   "id": 15,
    "type": "LoadImage",
    "title": "Background plate",
    "pos": [
@@ -673,7 +634,7 @@
     126
    ],
    "flags": {},
-   "order": 6,
+   "order": 5,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -681,7 +642,7 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      25
+      24
      ],
      "slot_index": 0
     },
@@ -701,7 +662,7 @@
    ]
   },
   {
-   "id": 17,
+   "id": 16,
    "type": "OccoQwenEditRiders",
    "title": "Qwen edit riders",
    "pos": [
@@ -713,38 +674,38 @@
     382
    ],
    "flags": {},
-   "order": 16,
+   "order": 15,
    "mode": 0,
    "inputs": [
     {
      "name": "model",
      "type": "MODEL",
-     "link": 12
+     "link": 11
     },
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 13
+     "link": 12
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 14
+     "link": 13
     },
     {
      "name": "spec",
      "type": "OCCO_SPEC",
-     "link": 15
+     "link": 14
     },
     {
      "name": "people",
      "type": "OCCO_PEOPLE",
-     "link": 16
+     "link": 15
     },
     {
      "name": "plan",
      "type": "OCCO_PLAN",
-     "link": 17
+     "link": 16
     }
    ],
    "outputs": [
@@ -752,7 +713,7 @@
      "name": "riders",
      "type": "OCCO_RIDERS",
      "links": [
-      20
+      19
      ],
      "slot_index": 0
     },
@@ -760,7 +721,7 @@
      "name": "posed_preview",
      "type": "IMAGE",
      "links": [
-      18
+      17
      ],
      "slot_index": 1
     },
@@ -768,7 +729,7 @@
      "name": "styled_preview",
      "type": "IMAGE",
      "links": [
-      19
+      18
      ],
      "slot_index": 2
     }
@@ -786,12 +747,47 @@
    ]
   },
   {
-   "id": 18,
+   "id": 17,
    "type": "PreviewImage",
    "title": "Posed riders",
    "pos": [
     520,
     2578
+   ],
+   "size": [
+    420,
+    420
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "links": [],
+     "slot_index": 0
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "PreviewImage"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 18,
+   "type": "PreviewImage",
+   "title": "Stylized riders",
+   "pos": [
+    520,
+    3048
    ],
    "size": [
     420,
@@ -822,41 +818,6 @@
   },
   {
    "id": 19,
-   "type": "PreviewImage",
-   "title": "Stylized riders",
-   "pos": [
-    520,
-    3048
-   ],
-   "size": [
-    420,
-    420
-   ],
-   "flags": {},
-   "order": 18,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "images",
-     "type": "IMAGE",
-     "link": 19
-    }
-   ],
-   "outputs": [
-    {
-     "name": "images",
-     "type": "IMAGE",
-     "links": [],
-     "slot_index": 0
-    }
-   ],
-   "properties": {
-    "Node name for S&R": "PreviewImage"
-   },
-   "widgets_values": []
-  },
-  {
-   "id": 20,
    "type": "OccoCutout",
    "title": "Cutout",
    "pos": [
@@ -868,13 +829,13 @@
     150
    ],
    "flags": {},
-   "order": 19,
+   "order": 18,
    "mode": 0,
    "inputs": [
     {
      "name": "riders",
      "type": "OCCO_RIDERS",
-     "link": 20
+     "link": 19
     }
    ],
    "outputs": [
@@ -882,7 +843,7 @@
      "name": "riders",
      "type": "OCCO_RIDERS",
      "links": [
-      24
+      23
      ],
      "slot_index": 0
     },
@@ -890,7 +851,7 @@
      "name": "cutouts_preview",
      "type": "IMAGE",
      "links": [
-      21
+      20
      ],
      "slot_index": 1
     },
@@ -910,7 +871,7 @@
    ]
   },
   {
-   "id": 21,
+   "id": 20,
    "type": "PreviewImage",
    "title": "Cutouts",
    "pos": [
@@ -922,13 +883,13 @@
     420
    ],
    "flags": {},
-   "order": 20,
+   "order": 19,
    "mode": 0,
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 21
+     "link": 20
     }
    ],
    "outputs": [
@@ -945,7 +906,7 @@
    "widgets_values": []
   },
   {
-   "id": 22,
+   "id": 21,
    "type": "OccoCompose",
    "title": "Compose",
    "pos": [
@@ -957,28 +918,28 @@
     222
    ],
    "flags": {},
-   "order": 21,
+   "order": 20,
    "mode": 0,
    "inputs": [
     {
      "name": "spec",
      "type": "OCCO_SPEC",
-     "link": 22
+     "link": 21
     },
     {
      "name": "plan",
      "type": "OCCO_PLAN",
-     "link": 23
+     "link": 22
     },
     {
      "name": "riders",
      "type": "OCCO_RIDERS",
-     "link": 24
+     "link": 23
     },
     {
      "name": "plate",
      "type": "IMAGE",
-     "link": 25
+     "link": 24
     }
    ],
    "outputs": [
@@ -986,10 +947,10 @@
      "name": "composite",
      "type": "IMAGE",
      "links": [
-      26,
-      30,
-      33,
-      36
+      25,
+      29,
+      32,
+      35
      ],
      "slot_index": 0
     },
@@ -997,7 +958,7 @@
      "name": "layout",
      "type": "OCCO_LAYOUT",
      "links": [
-      66
+      65
      ],
      "slot_index": 1
     }
@@ -1011,7 +972,7 @@
    ]
   },
   {
-   "id": 23,
+   "id": 22,
    "type": "SaveImage",
    "title": "Save composite",
    "pos": [
@@ -1023,13 +984,13 @@
     420
    ],
    "flags": {},
-   "order": 22,
+   "order": 21,
    "mode": 0,
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 26
+     "link": 25
     }
    ],
    "outputs": [
@@ -1048,7 +1009,7 @@
    ]
   },
   {
-   "id": 24,
+   "id": 23,
    "type": "TextEncodeQwenImageEditPlus",
    "title": "harmonize: prompt",
    "pos": [
@@ -1060,13 +1021,13 @@
     242
    ],
    "flags": {},
-   "order": 23,
+   "order": 22,
    "mode": 0,
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 27
+     "link": 26
     },
     {
      "name": "prompt",
@@ -1074,17 +1035,78 @@
      "widget": {
       "name": "prompt"
      },
-     "link": 28
+     "link": 27
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 29
+     "link": 28
     },
     {
      "name": "image1",
      "type": "IMAGE",
+     "link": 29
+    },
+    {
+     "name": "image2",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "image3",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      33
+     ],
+     "slot_index": 0
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+   },
+   "widgets_values": [
+    ""
+   ]
+  },
+  {
+   "id": 24,
+   "type": "TextEncodeQwenImageEditPlus",
+   "title": "harmonize: negative",
+   "pos": [
+    60,
+    4140
+   ],
+   "size": [
+    420,
+    218
+   ],
+   "flags": {},
+   "order": 23,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
      "link": 30
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 31
+    },
+    {
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 32
     },
     {
      "name": "image2",
@@ -1118,46 +1140,24 @@
   },
   {
    "id": 25,
-   "type": "TextEncodeQwenImageEditPlus",
-   "title": "harmonize: negative",
+   "type": "FluxKontextMultiReferenceLatentMethod",
+   "title": "harmonize: ref method",
    "pos": [
-    60,
-    4140
+    520,
+    3848
    ],
    "size": [
     420,
-    218
+    122
    ],
    "flags": {},
-   "order": 24,
+   "order": 25,
    "mode": 0,
    "inputs": [
     {
-     "name": "clip",
-     "type": "CLIP",
-     "link": 31
-    },
-    {
-     "name": "vae",
-     "type": "VAE",
-     "link": 32
-    },
-    {
-     "name": "image1",
-     "type": "IMAGE",
+     "name": "conditioning",
+     "type": "CONDITIONING",
      "link": 33
-    },
-    {
-     "name": "image2",
-     "type": "IMAGE",
-     "link": null,
-     "shape": 7
-    },
-    {
-     "name": "image3",
-     "type": "IMAGE",
-     "link": null,
-     "shape": 7
     }
    ],
    "outputs": [
@@ -1165,25 +1165,25 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      35
+      38
      ],
      "slot_index": 0
     }
    ],
    "properties": {
-    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+    "Node name for S&R": "FluxKontextMultiReferenceLatentMethod"
    },
    "widgets_values": [
-    ""
+    "index_timestep_zero"
    ]
   },
   {
    "id": 26,
    "type": "FluxKontextMultiReferenceLatentMethod",
-   "title": "harmonize: ref method",
+   "title": "harmonize: ref method (neg)",
    "pos": [
     520,
-    3848
+    4020
    ],
    "size": [
     420,
@@ -1218,45 +1218,6 @@
   },
   {
    "id": 27,
-   "type": "FluxKontextMultiReferenceLatentMethod",
-   "title": "harmonize: ref method (neg)",
-   "pos": [
-    520,
-    4020
-   ],
-   "size": [
-    420,
-    122
-   ],
-   "flags": {},
-   "order": 27,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "conditioning",
-     "type": "CONDITIONING",
-     "link": 35
-    }
-   ],
-   "outputs": [
-    {
-     "name": "CONDITIONING",
-     "type": "CONDITIONING",
-     "links": [
-      40
-     ],
-     "slot_index": 0
-    }
-   ],
-   "properties": {
-    "Node name for S&R": "FluxKontextMultiReferenceLatentMethod"
-   },
-   "widgets_values": [
-    "index_timestep_zero"
-   ]
-  },
-  {
-   "id": 28,
    "type": "VAEEncode",
    "title": "harmonize: encode",
    "pos": [
@@ -1268,18 +1229,18 @@
     118
    ],
    "flags": {},
-   "order": 25,
+   "order": 24,
    "mode": 0,
    "inputs": [
     {
      "name": "pixels",
      "type": "IMAGE",
-     "link": 36
+     "link": 35
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 37
+     "link": 36
     }
    ],
    "outputs": [
@@ -1287,7 +1248,7 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      41
+      40
      ],
      "slot_index": 0
     }
@@ -1298,7 +1259,7 @@
    "widgets_values": []
   },
   {
-   "id": 29,
+   "id": 28,
    "type": "KSampler",
    "title": "harmonize: sample",
    "pos": [
@@ -1310,28 +1271,28 @@
     362
    ],
    "flags": {},
-   "order": 28,
+   "order": 27,
    "mode": 0,
    "inputs": [
     {
      "name": "model",
      "type": "MODEL",
-     "link": 38
+     "link": 37
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 39
+     "link": 38
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 40
+     "link": 39
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 41
+     "link": 40
     }
    ],
    "outputs": [
@@ -1339,7 +1300,7 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      42
+      41
      ],
      "slot_index": 0
     }
@@ -1358,7 +1319,7 @@
    ]
   },
   {
-   "id": 30,
+   "id": 29,
    "type": "VAEDecode",
    "title": "harmonize: decode",
    "pos": [
@@ -1370,18 +1331,18 @@
     118
    ],
    "flags": {},
-   "order": 29,
+   "order": 28,
    "mode": 0,
    "inputs": [
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 42
+     "link": 41
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 43
+     "link": 42
     }
    ],
    "outputs": [
@@ -1389,10 +1350,10 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      44,
-      48,
-      51,
-      54
+      43,
+      47,
+      50,
+      53
      ],
      "slot_index": 0
     }
@@ -1403,7 +1364,7 @@
    "widgets_values": []
   },
   {
-   "id": 31,
+   "id": 30,
    "type": "SaveImage",
    "title": "Save merch",
    "pos": [
@@ -1415,13 +1376,13 @@
     420
    ],
    "flags": {},
-   "order": 30,
+   "order": 29,
    "mode": 0,
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 44
+     "link": 43
     }
    ],
    "outputs": [
@@ -1440,7 +1401,7 @@
    ]
   },
   {
-   "id": 32,
+   "id": 31,
    "type": "TextEncodeQwenImageEditPlus",
    "title": "effects: prompt",
    "pos": [
@@ -1452,13 +1413,13 @@
     242
    ],
    "flags": {},
-   "order": 31,
+   "order": 30,
    "mode": 0,
    "inputs": [
     {
      "name": "clip",
      "type": "CLIP",
-     "link": 45
+     "link": 44
     },
     {
      "name": "prompt",
@@ -1466,17 +1427,78 @@
      "widget": {
       "name": "prompt"
      },
-     "link": 46
+     "link": 45
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 47
+     "link": 46
     },
     {
      "name": "image1",
      "type": "IMAGE",
+     "link": 47
+    },
+    {
+     "name": "image2",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
+    },
+    {
+     "name": "image3",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      51
+     ],
+     "slot_index": 0
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+   },
+   "widgets_values": [
+    ""
+   ]
+  },
+  {
+   "id": 32,
+   "type": "TextEncodeQwenImageEditPlus",
+   "title": "effects: negative",
+   "pos": [
+    1900,
+    4610
+   ],
+   "size": [
+    420,
+    218
+   ],
+   "flags": {},
+   "order": 31,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
      "link": 48
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 49
+    },
+    {
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 50
     },
     {
      "name": "image2",
@@ -1510,46 +1532,24 @@
   },
   {
    "id": 33,
-   "type": "TextEncodeQwenImageEditPlus",
-   "title": "effects: negative",
+   "type": "FluxKontextMultiReferenceLatentMethod",
+   "title": "effects: ref method",
    "pos": [
-    1900,
-    4610
+    2360,
+    3848
    ],
    "size": [
     420,
-    218
+    122
    ],
    "flags": {},
-   "order": 32,
+   "order": 33,
    "mode": 0,
    "inputs": [
     {
-     "name": "clip",
-     "type": "CLIP",
-     "link": 49
-    },
-    {
-     "name": "vae",
-     "type": "VAE",
-     "link": 50
-    },
-    {
-     "name": "image1",
-     "type": "IMAGE",
+     "name": "conditioning",
+     "type": "CONDITIONING",
      "link": 51
-    },
-    {
-     "name": "image2",
-     "type": "IMAGE",
-     "link": null,
-     "shape": 7
-    },
-    {
-     "name": "image3",
-     "type": "IMAGE",
-     "link": null,
-     "shape": 7
     }
    ],
    "outputs": [
@@ -1557,25 +1557,25 @@
      "name": "CONDITIONING",
      "type": "CONDITIONING",
      "links": [
-      53
+      56
      ],
      "slot_index": 0
     }
    ],
    "properties": {
-    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+    "Node name for S&R": "FluxKontextMultiReferenceLatentMethod"
    },
    "widgets_values": [
-    ""
+    "index_timestep_zero"
    ]
   },
   {
    "id": 34,
    "type": "FluxKontextMultiReferenceLatentMethod",
-   "title": "effects: ref method",
+   "title": "effects: ref method (neg)",
    "pos": [
     2360,
-    3848
+    4020
    ],
    "size": [
     420,
@@ -1610,45 +1610,6 @@
   },
   {
    "id": 35,
-   "type": "FluxKontextMultiReferenceLatentMethod",
-   "title": "effects: ref method (neg)",
-   "pos": [
-    2360,
-    4020
-   ],
-   "size": [
-    420,
-    122
-   ],
-   "flags": {},
-   "order": 35,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "conditioning",
-     "type": "CONDITIONING",
-     "link": 53
-    }
-   ],
-   "outputs": [
-    {
-     "name": "CONDITIONING",
-     "type": "CONDITIONING",
-     "links": [
-      58
-     ],
-     "slot_index": 0
-    }
-   ],
-   "properties": {
-    "Node name for S&R": "FluxKontextMultiReferenceLatentMethod"
-   },
-   "widgets_values": [
-    "index_timestep_zero"
-   ]
-  },
-  {
-   "id": 36,
    "type": "VAEEncode",
    "title": "effects: encode",
    "pos": [
@@ -1660,18 +1621,18 @@
     118
    ],
    "flags": {},
-   "order": 33,
+   "order": 32,
    "mode": 0,
    "inputs": [
     {
      "name": "pixels",
      "type": "IMAGE",
-     "link": 54
+     "link": 53
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 55
+     "link": 54
     }
    ],
    "outputs": [
@@ -1679,7 +1640,7 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      59
+      58
      ],
      "slot_index": 0
     }
@@ -1690,7 +1651,7 @@
    "widgets_values": []
   },
   {
-   "id": 37,
+   "id": 36,
    "type": "KSampler",
    "title": "effects: sample",
    "pos": [
@@ -1702,28 +1663,28 @@
     362
    ],
    "flags": {},
-   "order": 36,
+   "order": 35,
    "mode": 0,
    "inputs": [
     {
      "name": "model",
      "type": "MODEL",
-     "link": 56
+     "link": 55
     },
     {
      "name": "positive",
      "type": "CONDITIONING",
-     "link": 57
+     "link": 56
     },
     {
      "name": "negative",
      "type": "CONDITIONING",
-     "link": 58
+     "link": 57
     },
     {
      "name": "latent_image",
      "type": "LATENT",
-     "link": 59
+     "link": 58
     }
    ],
    "outputs": [
@@ -1731,7 +1692,7 @@
      "name": "LATENT",
      "type": "LATENT",
      "links": [
-      60
+      59
      ],
      "slot_index": 0
     }
@@ -1750,7 +1711,7 @@
    ]
   },
   {
-   "id": 38,
+   "id": 37,
    "type": "VAEDecode",
    "title": "effects: decode",
    "pos": [
@@ -1762,18 +1723,18 @@
     118
    ],
    "flags": {},
-   "order": 37,
+   "order": 36,
    "mode": 0,
    "inputs": [
     {
      "name": "samples",
      "type": "LATENT",
-     "link": 60
+     "link": 59
     },
     {
      "name": "vae",
      "type": "VAE",
-     "link": 61
+     "link": 60
     }
    ],
    "outputs": [
@@ -1781,8 +1742,8 @@
      "name": "IMAGE",
      "type": "IMAGE",
      "links": [
-      62,
-      63
+      61,
+      62
      ],
      "slot_index": 0
     }
@@ -1793,7 +1754,7 @@
    "widgets_values": []
   },
   {
-   "id": 39,
+   "id": 38,
    "type": "SaveImage",
    "title": "Save hero",
    "pos": [
@@ -1805,13 +1766,13 @@
     420
    ],
    "flags": {},
-   "order": 38,
+   "order": 37,
    "mode": 0,
    "inputs": [
     {
      "name": "images",
      "type": "IMAGE",
-     "link": 62
+     "link": 61
     }
    ],
    "outputs": [
@@ -1830,7 +1791,7 @@
    ]
   },
   {
-   "id": 40,
+   "id": 39,
    "type": "OccoVerify",
    "title": "Verify hero",
    "pos": [
@@ -1842,28 +1803,28 @@
     386
    ],
    "flags": {},
-   "order": 39,
+   "order": 38,
    "mode": 0,
    "inputs": [
     {
      "name": "image",
      "type": "IMAGE",
-     "link": 63
+     "link": 62
     },
     {
      "name": "spec",
      "type": "OCCO_SPEC",
-     "link": 64
+     "link": 63
     },
     {
      "name": "people",
      "type": "OCCO_PEOPLE",
-     "link": 65
+     "link": 64
     },
     {
      "name": "layout",
      "type": "OCCO_LAYOUT",
-     "link": 66
+     "link": 65
     }
    ],
    "outputs": [
@@ -1871,7 +1832,7 @@
      "name": "report",
      "type": "STRING",
      "links": [
-      67
+      66
      ],
      "slot_index": 0
     }
@@ -1888,7 +1849,7 @@
    ]
   },
   {
-   "id": 41,
+   "id": 40,
    "type": "PreviewAny",
    "title": "Verify report",
    "pos": [
@@ -1900,13 +1861,13 @@
     420
    ],
    "flags": {},
-   "order": 40,
+   "order": 39,
    "mode": 0,
    "inputs": [
     {
      "name": "source",
      "type": "*",
-     "link": 67
+     "link": 66
     }
    ],
    "outputs": [
@@ -1952,241 +1913,241 @@
    4,
    8,
    0,
-   10,
+   9,
    0,
    "IMAGE"
   ],
   [
    5,
-   9,
+   7,
    0,
    10,
-   1,
+   0,
    "IMAGE"
   ],
   [
    6,
-   7,
-   0,
-   11,
-   0,
-   "IMAGE"
-  ],
-  [
-   7,
-   11,
+   10,
    2,
-   12,
+   11,
    0,
    "IMAGE"
   ],
   [
-   8,
-   11,
+   7,
+   10,
    3,
-   13,
+   12,
    0,
    "*"
   ],
   [
+   8,
    9,
-   10,
    0,
-   14,
+   13,
    0,
    "OCCO_SPEC"
   ],
   [
+   9,
    10,
-   11,
    0,
-   14,
+   13,
    1,
    "OCCO_PEOPLE"
   ],
   [
-   11,
-   14,
+   10,
+   13,
    1,
-   15,
+   14,
    0,
    "*"
   ],
   [
-   12,
+   11,
    6,
    0,
-   17,
+   16,
    0,
    "MODEL"
   ],
   [
-   13,
+   12,
    2,
    0,
-   17,
+   16,
    1,
    "CLIP"
   ],
   [
-   14,
+   13,
    3,
    0,
-   17,
+   16,
    2,
    "VAE"
+  ],
+  [
+   14,
+   9,
+   0,
+   16,
+   3,
+   "OCCO_SPEC"
   ],
   [
    15,
    10,
    0,
-   17,
-   3,
-   "OCCO_SPEC"
-  ],
-  [
    16,
-   11,
-   0,
-   17,
    4,
    "OCCO_PEOPLE"
   ],
   [
-   17,
-   14,
+   16,
+   13,
    0,
-   17,
+   16,
    5,
    "OCCO_PLAN"
   ],
   [
-   18,
    17,
+   16,
    1,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   18,
+   16,
+   2,
    18,
    0,
    "IMAGE"
   ],
   [
    19,
-   17,
-   2,
+   16,
+   0,
    19,
-   0,
-   "IMAGE"
-  ],
-  [
-   20,
-   17,
-   0,
-   20,
    0,
    "OCCO_RIDERS"
   ],
   [
-   21,
    20,
+   19,
    1,
-   21,
+   20,
    0,
    "IMAGE"
   ],
   [
-   22,
-   10,
+   21,
+   9,
    0,
-   22,
+   21,
    0,
    "OCCO_SPEC"
   ],
   [
-   23,
-   14,
-   0,
    22,
+   13,
+   0,
+   21,
    1,
    "OCCO_PLAN"
   ],
   [
-   24,
-   20,
+   23,
+   19,
    0,
-   22,
+   21,
    2,
    "OCCO_RIDERS"
   ],
   [
+   24,
+   15,
+   0,
+   21,
+   3,
+   "IMAGE"
+  ],
+  [
    25,
-   16,
+   21,
    0,
    22,
-   3,
+   0,
    "IMAGE"
   ],
   [
    26,
-   22,
-   0,
-   23,
-   0,
-   "IMAGE"
-  ],
-  [
-   27,
    2,
    0,
-   24,
+   23,
    0,
    "CLIP"
   ],
   [
-   28,
-   14,
+   27,
+   13,
    2,
-   24,
+   23,
    1,
    "STRING"
   ],
   [
-   29,
+   28,
    3,
    0,
-   24,
+   23,
    2,
    "VAE"
   ],
   [
-   30,
-   22,
+   29,
+   21,
    0,
-   24,
+   23,
    3,
    "IMAGE"
   ],
   [
-   31,
+   30,
    2,
    0,
-   25,
+   24,
    0,
    "CLIP"
   ],
   [
-   32,
+   31,
    3,
    0,
-   25,
+   24,
    1,
    "VAE"
   ],
   [
-   33,
-   22,
+   32,
+   21,
    0,
-   25,
+   24,
    2,
    "IMAGE"
+  ],
+  [
+   33,
+   23,
+   0,
+   25,
+   0,
+   "CONDITIONING"
   ],
   [
    34,
@@ -2198,139 +2159,139 @@
   ],
   [
    35,
-   25,
+   21,
    0,
    27,
-   0,
-   "CONDITIONING"
-  ],
-  [
-   36,
-   22,
-   0,
-   28,
    0,
    "IMAGE"
   ],
   [
-   37,
+   36,
    3,
    0,
-   28,
+   27,
    1,
    "VAE"
   ],
   [
-   38,
+   37,
    6,
    0,
-   29,
+   28,
    0,
    "MODEL"
+  ],
+  [
+   38,
+   25,
+   0,
+   28,
+   1,
+   "CONDITIONING"
   ],
   [
    39,
    26,
    0,
-   29,
-   1,
+   28,
+   2,
    "CONDITIONING"
   ],
   [
    40,
    27,
    0,
-   29,
-   2,
-   "CONDITIONING"
+   28,
+   3,
+   "LATENT"
   ],
   [
    41,
    28,
    0,
    29,
-   3,
+   0,
    "LATENT"
   ],
   [
    42,
+   3,
+   0,
+   29,
+   1,
+   "VAE"
+  ],
+  [
+   43,
    29,
    0,
    30,
    0,
-   "LATENT"
-  ],
-  [
-   43,
-   3,
-   0,
-   30,
-   1,
-   "VAE"
-  ],
-  [
-   44,
-   30,
-   0,
-   31,
-   0,
    "IMAGE"
   ],
   [
-   45,
+   44,
    2,
    0,
-   32,
+   31,
    0,
    "CLIP"
   ],
   [
-   46,
-   14,
+   45,
+   13,
    3,
-   32,
+   31,
    1,
    "STRING"
   ],
   [
-   47,
+   46,
    3,
    0,
-   32,
+   31,
    2,
    "VAE"
   ],
   [
-   48,
-   30,
+   47,
+   29,
    0,
-   32,
+   31,
    3,
    "IMAGE"
   ],
   [
-   49,
+   48,
    2,
    0,
-   33,
+   32,
    0,
    "CLIP"
   ],
   [
-   50,
+   49,
    3,
    0,
-   33,
+   32,
    1,
    "VAE"
   ],
   [
-   51,
-   30,
+   50,
+   29,
    0,
-   33,
+   32,
    2,
    "IMAGE"
+  ],
+  [
+   51,
+   31,
+   0,
+   33,
+   0,
+   "CONDITIONING"
   ],
   [
    52,
@@ -2342,79 +2303,79 @@
   ],
   [
    53,
-   33,
+   29,
    0,
    35,
-   0,
-   "CONDITIONING"
-  ],
-  [
-   54,
-   30,
-   0,
-   36,
    0,
    "IMAGE"
   ],
   [
-   55,
+   54,
    3,
    0,
-   36,
+   35,
    1,
    "VAE"
   ],
   [
-   56,
+   55,
    6,
    0,
-   37,
+   36,
    0,
    "MODEL"
+  ],
+  [
+   56,
+   33,
+   0,
+   36,
+   1,
+   "CONDITIONING"
   ],
   [
    57,
    34,
    0,
-   37,
-   1,
+   36,
+   2,
    "CONDITIONING"
   ],
   [
    58,
    35,
    0,
-   37,
-   2,
-   "CONDITIONING"
+   36,
+   3,
+   "LATENT"
   ],
   [
    59,
    36,
    0,
    37,
-   3,
+   0,
    "LATENT"
   ],
   [
    60,
-   37,
-   0,
-   38,
-   0,
-   "LATENT"
-  ],
-  [
-   61,
    3,
    0,
-   38,
+   37,
    1,
    "VAE"
   ],
   [
-   62,
+   61,
+   37,
+   0,
    38,
+   0,
+   "IMAGE"
+  ],
+  [
+   62,
+   37,
    0,
    39,
    0,
@@ -2422,41 +2383,33 @@
   ],
   [
    63,
-   38,
+   9,
    0,
-   40,
-   0,
-   "IMAGE"
+   39,
+   1,
+   "OCCO_SPEC"
   ],
   [
    64,
    10,
    0,
-   40,
-   1,
-   "OCCO_SPEC"
-  ],
-  [
-   65,
-   11,
-   0,
-   40,
+   39,
    2,
    "OCCO_PEOPLE"
   ],
   [
-   66,
-   22,
+   65,
+   21,
    1,
-   40,
+   39,
    3,
    "OCCO_LAYOUT"
   ],
   [
-   67,
-   40,
+   66,
+   39,
    0,
-   41,
+   40,
    0,
    "*"
   ]
