@@ -25,11 +25,27 @@ if curl -sf "http://127.0.0.1:$PORT/v1/models" >/dev/null 2>&1; then
   echo "VLM already running: http://127.0.0.1:$PORT/v1"; exit 0
 fi
 
+# The RunPod ComfyUI image pins torch for ComfyUI through pip settings (PIP_CONSTRAINT /
+# extra index cu132). vLLM needs its own torch, so ignore those settings for this venv;
+# otherwise pip backtracks to an ancient vLLM source release and fails building it.
+clean_env() {
+  env -u PIP_CONSTRAINT -u PIP_INDEX_URL -u PIP_EXTRA_INDEX_URL -u PIP_FIND_LINKS \
+      -u UV_CONSTRAINT -u UV_INDEX_URL -u UV_EXTRA_INDEX_URL -u UV_INDEX \
+      PIP_CONFIG_FILE=/dev/null UV_NO_CONFIG=1 "$@"
+}
+
 if [[ ! -x "$VENV/bin/vllm" ]]; then
   echo "installing vLLM into $VENV (first time only, a few minutes)"
-  python3 -m venv "$VENV"
-  "$VENV/bin/pip" install -U pip
-  "$VENV/bin/pip" install vllm
+  rm -rf "$VENV"                                   # drop a half-finished venv from a failed try
+  if ! command -v uv >/dev/null 2>&1 && [[ ! -x "$HOME/.local/bin/uv" ]]; then
+    clean_env python3 -m pip install -q --user uv || curl -LsSf https://astral.sh/uv/install.sh | sh
+  fi
+  UV="$(command -v uv || echo "$HOME/.local/bin/uv")"
+  clean_env "$UV" venv --python 3.12 --seed "$VENV"   # vLLM wheels exist for 3.10-3.13
+  # prebuilt wheel only (never compile); torch-backend=auto picks the CUDA build that fits the driver
+  clean_env "$UV" pip install --python "$VENV/bin/python" \
+      --index-url https://pypi.org/simple --only-binary vllm --torch-backend=auto "${VLM_PIP_SPEC:-vllm}"
+  "$VENV/bin/python" -c "import torch, vllm; print('vllm', vllm.__version__, '| torch', torch.__version__, '| cuda', torch.version.cuda, '| gpu ok:', torch.cuda.is_available())"
 fi
 
 echo "starting $MODEL on port $PORT (log: $LOG)"
