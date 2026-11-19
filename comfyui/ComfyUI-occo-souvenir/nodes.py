@@ -34,7 +34,7 @@ from souvenir.analyzer import analyze
 from souvenir.compositor import compose
 from souvenir.config import load_product, resolve_asset
 from souvenir.detect import MockDetector, build_detector
-from souvenir.planner import make_plan
+from souvenir.planner import FACE_CROP_SUFFIX, make_plan
 from souvenir.poses import ARMS, draw_pose
 from souvenir.schemas import Box
 from souvenir.vlm import MockVLM, OpenAICompatibleVLM
@@ -96,7 +96,11 @@ class OccoProductSpec:
         return {
             "required": {"spec_path": ("STRING", {"default": "configs/products/slotzilla_flight_v1.json",
                                                   "tooltip": "Product spec JSON, absolute or relative to the occo-souvenir-pipeline folder"})},
-            "optional": {"style_image": ("IMAGE", {"tooltip": "House-style reference. Without it, stylize uses the spec's text style description."})},
+            "optional": {
+                "style_image": ("IMAGE", {"tooltip": "Scene / overall style reference."}),
+                "character_style_image": ("IMAGE", {"tooltip": "A cartoon sample person in the wanted style: how riders are drawn. "
+                                                    "If not connected, the spec's character_style_refs files are used (assets/style_refs/slotzilla_character_*.png)."}),
+            },
         }
 
     RETURN_TYPES = ("OCCO_SPEC", "STRING")
@@ -104,7 +108,9 @@ class OccoProductSpec:
     FUNCTION = "run"
     CATEGORY = CATEGORY
 
-    def run(self, spec_path: str, style_image: torch.Tensor | None = None):
+    def run(self, spec_path: str, style_image: torch.Tensor | None = None, character_style_image: torch.Tensor | None = None):
+        import glob
+
         spec = load_product(spec_path)
         poses: dict[str, Image.Image] = {}
         for key, path in spec.pose_refs.items():
@@ -116,8 +122,15 @@ class OccoProductSpec:
             else:
                 raise FileNotFoundError(f"pose reference '{key}' not found at {p}")
         style = t2p(style_image) if style_image is not None else None
+        character = t2p(character_style_image) if character_style_image is not None else None
+        if character is None:
+            for pattern in spec.character_style_refs:
+                found = sorted(glob.glob(str(resolve_asset(pattern))))
+                if found:
+                    character = Image.open(found[0]).convert("RGB")
+                    break
         plate_prompt = spec.plate_prompt.replace("in the illustration style of image 1", f"in a {spec.style_description}")
-        return ({"spec": spec, "style": style, "poses": poses}, plate_prompt)
+        return ({"spec": spec, "style": style, "character": character, "poses": poses}, plate_prompt)
 
 
 # --------------------------------------------------------------------------- detect
@@ -256,8 +269,9 @@ def qwen_edit(model, clip, vae, images: list[torch.Tensor], prompt: str, seed: i
 
 
 def _without_style_image(prompt: str, style_description: str) -> str:
-    style = style_description or "3D animated feature-film style"
-    p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", prompt)
+    style = style_description or "cartoon style"
+    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", prompt)
+    p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", p)
     return p.replace("image 3", "image 2")
 
 
@@ -277,6 +291,8 @@ class OccoQwenEditRiders:
                 "sampler_name": (comfy.samplers.KSampler.SAMPLERS, {"default": "euler"}),
                 "scheduler": (comfy.samplers.KSampler.SCHEDULERS, {"default": "simple"}),
                 "reference_method": (["index_timestep_zero", "index", "offset"], {"default": "index_timestep_zero"}),
+                "use_face_crop": ("BOOLEAN", {"default": False, "tooltip": "Also pass the face close-up to stylize. "
+                                              "Helps identity but Qwen may draw it as a second person."}),
             }
         }
 
@@ -285,10 +301,11 @@ class OccoQwenEditRiders:
     FUNCTION = "run"
     CATEGORY = CATEGORY
 
-    def run(self, model, clip, vae, spec, people, plan, steps, cfg, sampler_name, scheduler, reference_method):
+    def run(self, model, clip, vae, spec, people, plan, steps, cfg, sampler_name, scheduler, reference_method,
+            use_face_crop=False):
         analysis = people["analysis"]
         s = spec["spec"]
-        style = spec["style"]
+        style = spec.get("character") or spec["style"]  # riders follow the cartoon sample person when given
         pbar = comfy.utils.ProgressBar(2 * len(plan.per_person))
         riders, posed_imgs, styled_imgs = [], [], []
         for pp in plan.per_person:
@@ -302,9 +319,12 @@ class OccoQwenEditRiders:
                               steps, cfg, sampler_name, scheduler, reference_method)
             pbar.update(1)
             if style is not None:
-                imgs, prompt = [posed, p2t(style), face], style_step.prompt
+                imgs, prompt = [posed, p2t(style)], style_step.prompt
             else:
-                imgs, prompt = [posed, face], _without_style_image(style_step.prompt, s.style_description)
+                imgs, prompt = [posed], _without_style_image(style_step.prompt, s.style_description)
+            if use_face_crop:
+                imgs.append(face)
+                prompt += FACE_CROP_SUFFIX if style is not None else FACE_CROP_SUFFIX.replace("Image 3", "Image 2")
             styled = qwen_edit(model, clip, vae, imgs, prompt, style_step.seed or 0,
                                steps, cfg, sampler_name, scheduler, reference_method)
             pbar.update(1)

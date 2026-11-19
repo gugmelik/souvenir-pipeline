@@ -110,6 +110,10 @@ ocr:
   langs: [en]
   gpu: false
 
+# ---------------------------------------------------------------- executor
+executor:
+  use_face_crop: false                          # true = also pass the face close-up to stylize (can cause a 2nd person)
+
 # ---------------------------------------------------------------- flow control
 retries:                                        # extra attempts (new seed) when a step fails its check
   pose: 2

@@ -82,7 +82,8 @@ class ProductSpec(BaseModel):
     product: str
     title: str = ""
     canvas: Canvas = Field(default_factory=Canvas)
-    style_refs: list[str]
+    style_refs: list[str]  # scene / overall style (plate, fallback for riders)
+    character_style_refs: list[str] = Field(default_factory=list)  # a cartoon sample person: how riders are drawn
     style_description: str = ""
     background_plates: list[str]  # paths or globs, e.g. "assets/plates/approved/slotzilla_*.png"
     plate_prompt: str = ""  # used by `souvenir plates` to draft background candidates

@@ -1054,7 +1054,13 @@
     "style_image": [
      "IMAGE",
      {
-      "tooltip": "House-style reference. Without it, stylize uses the spec's text style description."
+      "tooltip": "Scene / overall style reference."
+     }
+    ],
+    "character_style_image": [
+     "IMAGE",
+     {
+      "tooltip": "A cartoon sample person in the wanted style: how riders are drawn. If not connected, the spec's character_style_refs files are used (assets/style_refs/slotzilla_character_*.png)."
      }
     ]
    }
@@ -1064,7 +1070,8 @@
     "spec_path"
    ],
    "optional": [
-    "style_image"
+    "style_image",
+    "character_style_image"
    ]
   },
   "is_input_list": false,
@@ -1207,6 +1214,13 @@
      {
       "default": "index_timestep_zero"
      }
+    ],
+    "use_face_crop": [
+     "BOOLEAN",
+     {
+      "default": false,
+      "tooltip": "Also pass the face close-up to stylize. Helps identity but Qwen may draw it as a second person."
+     }
     ]
    }
   },
@@ -1222,7 +1236,8 @@
     "cfg",
     "sampler_name",
     "scheduler",
-    "reference_method"
+    "reference_method",
+    "use_face_crop"
    ]
   },
   "is_input_list": false,

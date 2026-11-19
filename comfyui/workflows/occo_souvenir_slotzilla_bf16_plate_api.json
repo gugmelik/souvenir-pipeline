@@ -218,7 +218,8 @@
       "cfg": 1.0,
       "sampler_name": "euler",
       "scheduler": "simple",
-      "reference_method": "index_timestep_zero"
+      "reference_method": "index_timestep_zero",
+      "use_face_crop": false
     },
     "_meta": {
       "title": "Qwen edit riders"

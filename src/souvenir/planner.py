@@ -24,6 +24,10 @@ from souvenir.vlm import VLM
 
 log = logging.getLogger(__name__)
 
+# Appended to the stylize prompt only when the face crop is passed as image 3 (off by default: Qwen tends to
+# draw every person it is shown, so an extra face image can become a second rider).
+FACE_CROP_SUFFIX = " Image 3 is a close-up of the same person's face; use it only to keep the face recognizable."
+
 _NEGATION = re.compile(r"\b(do not|don't|never|avoid|must not|no extra)\b", re.I)
 
 
@@ -97,7 +101,7 @@ def _skeleton(spec: ProductSpec, analysis: Analysis, seed: int) -> Plan:
                 expression=expression,
                 steps=[
                     Step(op="pose", inputs=["body_crop", "pose_ref"], prompt=fill(spec.templates.pose, card, arms, expression), seed=base + 1),
-                    Step(op="stylize", inputs=["prev", "style_ref", "face_crop"], prompt=fill(spec.templates.stylize, card, arms, expression), seed=base + 2),
+                    Step(op="stylize", inputs=["prev", "style_ref"], prompt=fill(spec.templates.stylize, card, arms, expression), seed=base + 2),
                     Step(op="cutout", inputs=["prev"]),
                 ],
             )
@@ -148,7 +152,8 @@ class LLMPlanner:
                     "arms": pp.arms,
                     "expression": pp.expression,
                     "pose_step_images": {"image 1": "photo crop of this person", "image 2": "pose reference drawing"},
-                    "stylize_step_images": {"image 1": "result of the pose step", "image 2": "house style reference", "image 3": "original face crop"},
+                    "stylize_step_images": {"image 1": "result of the pose step (the only person to draw)",
+                                            "image 2": "style reference: copy its drawing style only, never add its people"},
                     "template_pose": pp.steps[0].prompt,
                     "template_stylize": pp.steps[1].prompt,
                 }

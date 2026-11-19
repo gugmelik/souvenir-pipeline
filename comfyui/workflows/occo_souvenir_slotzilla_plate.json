@@ -328,7 +328,7 @@
    ],
    "size": [
     420,
-    122
+    146
    ],
    "flags": {},
    "order": 7,
@@ -338,6 +338,12 @@
      "name": "style_image",
      "type": "IMAGE",
      "link": 4
+    },
+    {
+     "name": "character_style_image",
+     "type": "IMAGE",
+     "link": null,
+     "shape": 7
     }
    ],
    "outputs": [
@@ -372,7 +378,7 @@
    "title": "Detect people",
    "pos": [
     520,
-    930
+    954
    ],
    "size": [
     420,
@@ -665,7 +671,7 @@
    ],
    "size": [
     420,
-    354
+    382
    ],
    "flags": {},
    "order": 15,
@@ -736,7 +742,8 @@
     1.0,
     "euler",
     "simple",
-    "index_timestep_zero"
+    "index_timestep_zero",
+    false
    ]
   },
   {

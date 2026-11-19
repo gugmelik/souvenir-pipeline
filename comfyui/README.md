@@ -102,6 +102,21 @@ Change **seed** on **Plan** (or on the core KSamplers) to try variations.
 3. **Compose** takes the canvas from the plate (`canvas = from plate`, long side 1600). A landscape plate stays
    landscape and nothing gets cropped.
 
+## Style references, and "two people instead of one"
+
+- **Scene style:** `assets/style_refs/slotzilla_style_01.png`, wired as **Style reference**.
+- **Character style:** put a cartoon sample person at `assets/style_refs/slotzilla_character_01.png`, then
+  `git pull` + `install.sh` on the pod. **Product spec** picks it up automatically, or you can connect a
+  **Load Image** to its `character_style_image` input. The stylize step then follows that character's
+  drawing style. Without it, stylize uses the scene image.
+- **Two people in one rider's image:** Qwen-Image-Edit tends to draw every person it's shown. The stylize step
+  now gets only [posed person, style picture], and every person prompt says "Show exactly one person". The face
+  close-up is off (`use_face_crop` on **Qwen edit riders**). Turn it on only if faces drift, and check for a
+  second person.
+- To see where an extra person appears, look at the previews: **Rider crops** (detection found 2?), **Posed
+  riders** (pose step), **Stylized riders** (stylize step), or merch/hero (the harmonize/effects passes redraw the
+  whole picture). **Verify report** flags a rider count that doesn't match.
+
 ## Where it can run
 
 - **Local ComfyUI, or a ComfyUI pod you control** (RunPod / Vast instance): yes, install the nodes as above.

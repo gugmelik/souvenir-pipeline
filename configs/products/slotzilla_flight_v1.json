@@ -2,14 +2,21 @@
   "product": "slotzilla_flight_v1",
   "title": "Slotzilla zipline - I'M FLYING souvenir",
   "notes": "Derived from briefs/slotzilla_flight_brief.md. Style reference: assets/style_refs/slotzilla_style_01.png (neon 2D cartoon, no studio names). The SLOTZILLA sign is the client's own attraction; confirm with the client that it may appear on merchandise.",
-  "canvas": {"width": 1200, "height": 1600},
-
-  "style_refs": ["assets/style_refs/slotzilla_style_*.png"],
+  "canvas": {
+    "width": 1200,
+    "height": 1600
+  },
+  "style_refs": [
+    "assets/style_refs/slotzilla_style_*.png"
+  ],
+  "character_style_refs": [
+    "assets/style_refs/slotzilla_character_*.png"
+  ],
   "style_description": "bold-outline 2D cartoon illustration with cel shading, expressive faces with big eyes, saturated neon purple, pink and gold night palette, clean lines suitable for merchandise",
-
-  "background_plates": ["assets/plates/approved/slotzilla_*.png"],
+  "background_plates": [
+    "assets/plates/approved/slotzilla_*.png"
+  ],
   "plate_prompt": "A night scene in the illustration style of image 1, seen from high above a glowing pedestrian street in downtown Las Vegas. On the upper left stands a tall zipline launch tower with a glowing neon SLOTZILLA sign and lucky 777 lights. Far below, a long LED canopy streaks with purple, pink and gold light, with vintage neon signs and small palm trees for scale. A large neon sign reads 'Las Vegas 2026'. Empty zipline cables run from the upper left to the lower right across an open night sky. Portrait 3:4.",
-
   "pose_refs": {
     "prone_superman": "assets/poses/prone_superman.png",
     "prone_celebrate": "assets/poses/prone_celebrate.png",
@@ -20,12 +27,28 @@
     "prone_celebrate": "arms raised in a triumphant cheer",
     "prone_point": "one arm stretched forward and the other pointing to the side"
   },
-  "formation_rules": {"1": "solo_hero", "2": "race_mode", "3": "staggered_line", "4+": "v_formation"},
+  "formation_rules": {
+    "1": "solo_hero",
+    "2": "race_mode",
+    "3": "staggered_line",
+    "4+": "v_formation"
+  },
   "pose_by_formation": {
-    "solo_hero": ["prone_superman"],
-    "race_mode": ["prone_point", "prone_superman"],
-    "staggered_line": ["prone_superman", "prone_celebrate"],
-    "v_formation": ["prone_superman", "prone_celebrate"]
+    "solo_hero": [
+      "prone_superman"
+    ],
+    "race_mode": [
+      "prone_point",
+      "prone_superman"
+    ],
+    "staggered_line": [
+      "prone_superman",
+      "prone_celebrate"
+    ],
+    "v_formation": [
+      "prone_superman",
+      "prone_celebrate"
+    ]
   },
   "expression_variants": [
     "Screaming with laughter, wind-whipped grin",
@@ -34,18 +57,28 @@
   ],
   "cable_direction": "upper_left_to_lower_right",
   "cable_angle_deg": 22,
-
   "templates": {
-    "pose": "Show the person from image 1 lying horizontally in a zipline harness, flying face down and forward, in the body pose of image 2: {arms}, legs extended behind with knees slightly bent. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
-    "stylize": "Redraw the person from image 1 as a full-body cartoon character in the illustration style of image 2, with bold outlines and cel shading, keeping the same flying pose. Keep the face of image 3 clearly recognizable, the same {clothing}, and {hair}. {expression}. Plain light background.",
+    "pose": "Show exactly one person: the person from image 1, lying horizontally in a zipline harness, flying face down and forward. Image 2 is only a pose diagram; copy its body position: {arms}, legs extended behind with knees slightly bent. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
+    "stylize": "Redraw the person from image 1 as a full-body cartoon character, using only the drawing style of image 2: bold outlines, cel shading, expressive eyes. Show exactly one person: the person from image 1, with the same face, {clothing}, and {hair}, in the same flying pose. {expression}. Plain light background.",
     "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. Keep every rider's face, pose and clothing the same.",
     "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. Keep the riders and their faces sharp and the same.",
     "pose_check_question": "Is the person lying horizontally, face down and forward, in a flying pose?"
   },
-
-  "required_text": ["Las Vegas 2026"],
-  "banned_text_ocr": ["golden nugget", "nugget"],
-  "banned_terms_in_prompts": ["Disney", "Pixar", "Golden Nugget", "Nugget", "Marvel", "DreamWorks"],
+  "required_text": [
+    "Las Vegas 2026"
+  ],
+  "banned_text_ocr": [
+    "golden nugget",
+    "nugget"
+  ],
+  "banned_terms_in_prompts": [
+    "Disney",
+    "Pixar",
+    "Golden Nugget",
+    "Nugget",
+    "Marvel",
+    "DreamWorks"
+  ],
   "checklist": [
     "Is every person lying horizontally in a flying pose, face down and forward?",
     "Does each person hang from a separate, clearly visible zipline cable?",

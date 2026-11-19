@@ -96,8 +96,9 @@ def where(slot: Slot) -> str:
 
 def _without_style_image(prompt: str, style_description: str) -> str:
     """Rewrite a stylize prompt for [posed, face] inputs when no style reference image exists."""
-    style = style_description or "3D animated feature-film style"
-    p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", prompt)
+    style = style_description or "cartoon style"
+    p = re.sub(r"using only the drawing style of image 2", f"in a {style}", prompt)
+    p = re.sub(r"in the (illustration )?style of image 2", f"in a {style}", p)
     return p.replace("image 3", "image 2")
 
 
@@ -131,14 +132,13 @@ def build_workflow(spec: ProductSpec, analysis: Analysis, plan: Plan, refs: dict
     for pp in plan.per_person:
         pose_step, style_step = pp.steps[0], pp.steps[1]
         body = load(f"body:{pp.id}", f"person {pp.id} body crop")
-        face = load(f"face:{pp.id}", f"person {pp.id} face crop")
         pose_ref = load(f"pose:{pp.pose_ref}", f"pose {pp.pose_ref}")
         posed = q.edit([body, pose_ref], pose_step.prompt, seed=pose_step.seed or 0, title=f"person {pp.id} pose")
         save(posed, f"person_{pp.id}_pose")
         if style is not None:
-            styled = q.edit([posed, style, face], style_step.prompt, seed=style_step.seed or 0, title=f"person {pp.id} stylize")
+            styled = q.edit([posed, style], style_step.prompt, seed=style_step.seed or 0, title=f"person {pp.id} stylize")
         else:
-            styled = q.edit([posed, face], _without_style_image(style_step.prompt, spec.style_description),
+            styled = q.edit([posed], _without_style_image(style_step.prompt, spec.style_description),
                             seed=style_step.seed or 0, title=f"person {pp.id} stylize")
         save(styled, f"person_{pp.id}_style")
         riders[pp.id] = styled
@@ -186,13 +186,13 @@ def collect_inputs(spec: ProductSpec, analysis: Analysis, plan: Plan, out_dir: P
 
     if spec.background_plates and Path(plan.plate).is_file():
         put("plate", plan.plate)
-    if spec.style_refs and Path(spec.style_refs[0]).is_file():
-        put("style", spec.style_refs[0])
+    refs = spec.character_style_refs or spec.style_refs
+    if refs and Path(refs[0]).is_file():
+        put("style", refs[0])
     for key in {pp.pose_ref for pp in plan.per_person}:
         put(f"pose:{key}", spec.pose_refs[key])
     for pp in plan.per_person:
         put(f"body:{pp.id}", analysis.crops[str(pp.id)]["body"])
-        put(f"face:{pp.id}", analysis.crops[str(pp.id)]["face"])
     return files
 
 

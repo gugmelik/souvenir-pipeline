@@ -98,7 +98,7 @@ def build_api(precision: str = "fp8", text_encoder: str = "fp8", plate_image: bo
     R = "3. Riders: pose -> stylize (loop) -> cutout -> compose"
     g.add("30", "OccoQwenEditRiders", "Qwen edit riders", R, model=["6", 0], clip=["2", 0], vae=["3", 0], spec=["11", 0],
           people=["12", 0], plan=["15", 0], steps=4, cfg=1.0, sampler_name="euler", scheduler="simple",
-          reference_method="index_timestep_zero")
+          reference_method="index_timestep_zero", use_face_crop=False)
     g.add("31", "PreviewImage", "Posed riders", R, images=["30", 1])
     g.add("32", "PreviewImage", "Stylized riders", R, images=["30", 2])
     g.add("33", "OccoCutout", "Cutout", R, riders=["30", 0], method="auto", white_tolerance=38)

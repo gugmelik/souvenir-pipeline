@@ -26,7 +26,7 @@ from souvenir.detect import Detector, build_detector
 from souvenir.identity import IdentityScorer, build_scorer
 from souvenir.imaging import load_image, save
 from souvenir.ocr import build_ocr
-from souvenir.planner import make_plan
+from souvenir.planner import FACE_CROP_SUFFIX, make_plan
 from souvenir.schemas import (
     Analysis, CheckResult, ProductSpec, RunReport, Step, StepRecord,
 )
@@ -103,6 +103,7 @@ class Pipeline:
         self.retries = cfg.section("retries")
         self.spec.background_plates = expand(spec.background_plates)
         self.spec.style_refs = expand(spec.style_refs)
+        self.spec.character_style_refs = expand(spec.character_style_refs)
         self.spec.pose_refs = {k: str(resolve_asset(v)) for k, v in spec.pose_refs.items()}
 
     # ------------------------------------------------------------------ public
@@ -159,7 +160,9 @@ class Pipeline:
         if not self.spec.style_refs:
             raise RuntimeError("no style reference found; add house-style images (see assets/README.md)")
 
-        style_ref = load_image(self.spec.style_refs[0])
+        # riders are drawn after the cartoon sample person when there is one, else after the scene style
+        style_ref = load_image((self.spec.character_style_refs or self.spec.style_refs)[0])
+        use_face_crop = bool(self.cfg.get("executor.use_face_crop", False))
         cutouts: dict[int, Image.Image] = {}
         steps_dir = out / "steps"
 
@@ -178,7 +181,11 @@ class Pipeline:
                                                    output=path, seconds=round(time.perf_counter() - t, 2)))
                     cutouts[pp.id] = rgba
                     continue
-                images = [named[k] for k in step.inputs]
+                inputs = list(step.inputs)
+                if step.op == "stylize" and use_face_crop and "face_crop" not in inputs:
+                    inputs.append("face_crop")
+                    step = step.model_copy(update={"prompt": step.prompt + FACE_CROP_SUFFIX})
+                images = [named[k] for k in inputs]
                 check = self._person_check(step.op, pp.id, face)
                 prev = self._edit_with_retries(step, images, check, int(self.retries.get(step.op, 1)),
                                                steps_dir / f"person_{pp.id}_{step.op}", pp.id, report)
