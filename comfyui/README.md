@@ -24,7 +24,18 @@ The workflow is grouped into bands:
 4. **Harmonize (merch) and effects (hero)**.
 5. **Checks**: the report as text.
 
-## Install (once)
+## Install on Linux (after `git clone`)
+
+```bash
+source ~/ComfyUI/.venv/bin/activate            # the Python that runs ComfyUI
+bash comfyui/install.sh ~/ComfyUI --models bf16  # links the nodes, installs packages, downloads bf16 models
+# --models fp8 for the smaller files, --models none to skip downloads; --no-face / --no-rembg to skip those packages
+```
+
+Then restart ComfyUI and open `comfyui/workflows/occo_souvenir_slotzilla_bf16.json`.
+The nodes are a symlink into this repo, so a later `git pull` + ComfyUI restart updates them.
+
+## Install on Windows
 
 ```powershell
 cd C:\dev\occo\occo-souvenir-pipeline
@@ -38,13 +49,21 @@ Model files go in your ComfyUI `models\` folder, with the same names as in your 
 
 | File | Folder | Hugging Face repo |
 |---|---|---|
-| `qwen_image_edit_2511_fp8mixed.safetensors` | `diffusion_models` | Comfy-Org/Qwen-Image-Edit_ComfyUI (`split_files/diffusion_models/`) |
+| `qwen_image_edit_2511_bf16.safetensors` or `qwen_image_edit_2511_fp8mixed.safetensors` | `diffusion_models` | Comfy-Org/Qwen-Image-Edit_ComfyUI (`split_files/diffusion_models/`) |
 | `qwen_2.5_vl_7b_fp8_scaled.safetensors` | `text_encoders` | Comfy-Org/HunyuanVideo_1.5_repackaged (`split_files/text_encoders/`) |
 | `qwen_image_vae.safetensors` | `vae` | Comfy-Org/Qwen-Image_ComfyUI (`split_files/vae/`) |
 | `Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors` | `loras` | lightx2v/Qwen-Image-Edit-2511-Lightning |
 
-The GPU needs to fit the fp8 model (about 20 GB) plus the fp8 text encoder; ComfyUI offloads between them.
-A 24 GB card works; a 32-48 GB card is comfortable.
+Two versions of the workflow, identical except for the diffusion-model file:
+
+| Workflow | Diffusion model | Size | GPU |
+|---|---|---|---|
+| `occo_souvenir_slotzilla_bf16.json` | `qwen_image_edit_2511_bf16.safetensors` | ~41 GB | 48 GB+ (or ComfyUI offloading with plenty of system RAM) |
+| `occo_souvenir_slotzilla.json` | `qwen_image_edit_2511_fp8mixed.safetensors` | ~20 GB | 24 GB+ |
+
+Both use the fp8 text encoder, the VAE and the Lightning LoRA (bf16) listed above. For a bf16 text encoder too,
+run `python comfyui/build_workflow.py` after changing `build_api(precision, text_encoder)` in the variants list
+(the file is `qwen_2.5_vl_7b.safetensors` from Comfy-Org/Qwen-Image_ComfyUI, `split_files/text_encoders/`).
 
 ## Run
 
@@ -76,7 +95,8 @@ Change **seed** on **Plan** (or on the core KSamplers) to try variations.
 ## Files
 
 - `ComfyUI-occo-souvenir/`: the custom nodes (`__init__.py`, `nodes.py`).
-- `workflows/occo_souvenir_slotzilla.json`: editor format, open this in ComfyUI.
-- `workflows/occo_souvenir_slotzilla_api.json`: API format for `POST /prompt`.
+- `workflows/occo_souvenir_slotzilla_bf16.json` / `occo_souvenir_slotzilla.json` (fp8): editor format, open in ComfyUI.
+- `workflows/*_api.json`: the same in API format for `POST /prompt`.
+- `install.sh` (Linux) / `install.ps1` (Windows): node install.
 - `build_workflow.py`: regenerates both. Run `python comfyui\build_workflow.py --comfy http://127.0.0.1:8188`
   with ComfyUI running to refresh node definitions, or without `--comfy` to use `object_info_cache.json`.

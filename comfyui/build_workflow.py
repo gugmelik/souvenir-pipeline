@@ -24,6 +24,8 @@ WIDGET_TYPES = {"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO"}
 MODELS = {
     "unet": "qwen_image_edit_2511_fp8mixed.safetensors",
     "clip": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+    "unet_bf16": "qwen_image_edit_2511_bf16.safetensors",          # Comfy-Org/Qwen-Image-Edit_ComfyUI
+    "clip_bf16": "qwen_2.5_vl_7b.safetensors",                     # Comfy-Org/Qwen-Image_ComfyUI
     "vae": "qwen_image_vae.safetensors",
     "lora": "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors",
 }
@@ -59,11 +61,13 @@ def qwen_edit(g: G, p: str, title: str, group: str, image1, prompt, seed: int, e
     return g.add(f"{p}7", "VAEDecode", f"{title}: decode", group, samples=[f"{p}6", 0], vae=["3", 0])
 
 
-def build_api() -> G:
+def build_api(precision: str = "fp8", text_encoder: str = "fp8") -> G:
     g = G()
-    M = "Models (Qwen-Image-Edit-2511 + Lightning 4-step)"
-    g.add("1", "UNETLoader", "Load Qwen-Image-Edit-2511", M, unet_name=MODELS["unet"], weight_dtype="default")
-    g.add("2", "CLIPLoader", "Load text encoder", M, clip_name=MODELS["clip"], type="qwen_image", device="default")
+    unet = MODELS["unet_bf16"] if precision == "bf16" else MODELS["unet"]
+    clip = MODELS["clip_bf16"] if text_encoder == "bf16" else MODELS["clip"]
+    M = f"Models (Qwen-Image-Edit-2511 {precision} + Lightning 4-step)"
+    g.add("1", "UNETLoader", f"Load Qwen-Image-Edit-2511 ({precision})", M, unet_name=unet, weight_dtype="default")
+    g.add("2", "CLIPLoader", f"Load text encoder ({text_encoder})", M, clip_name=clip, type="qwen_image", device="default")
     g.add("3", "VAELoader", "Load VAE", M, vae_name=MODELS["vae"])
     g.add("4", "ModelSamplingAuraFlow", "AuraFlow shift", M, model=["1", 0], shift=3.1)
     g.add("5", "CFGNorm", "CFGNorm", M, model=["4", 0], strength=1.0, pre_cfg=False)
@@ -232,6 +236,7 @@ def main() -> int:
     ap.add_argument("--comfy", default=None, help="running ComfyUI URL to read /object_info from (refreshes the cache)")
     ap.add_argument("--out", default=str(HERE / "workflows"))
     a = ap.parse_args()
+    variants = {"": ("fp8", "fp8"), "_bf16": ("bf16", "fp8")}
     g = build_api()
     classes = sorted({n["class_type"] for n in g.nodes.values()})
     if a.comfy:
@@ -246,9 +251,11 @@ def main() -> int:
     info = json.loads(CACHE.read_text(encoding="utf-8"))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "occo_souvenir_slotzilla_api.json").write_text(json.dumps(g.nodes, indent=2), encoding="utf-8")
-    (out / "occo_souvenir_slotzilla.json").write_text(json.dumps(to_ui(g, info), indent=1), encoding="utf-8")
-    print(f"wrote {out / 'occo_souvenir_slotzilla.json'} and {out / 'occo_souvenir_slotzilla_api.json'} ({len(g.nodes)} nodes)")
+    for suffix, (precision, te) in variants.items():
+        gv = build_api(precision, te)
+        (out / f"occo_souvenir_slotzilla{suffix}_api.json").write_text(json.dumps(gv.nodes, indent=2), encoding="utf-8")
+        (out / f"occo_souvenir_slotzilla{suffix}.json").write_text(json.dumps(to_ui(gv, info), indent=1), encoding="utf-8")
+        print(f"wrote occo_souvenir_slotzilla{suffix}.json (+ _api) - diffusion model {precision}, text encoder {te}")
     return 0
 
 

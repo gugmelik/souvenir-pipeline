@@ -1,0 +1,4 @@
+# Keep Linux scripts runnable when the repo is committed from Windows (core.autocrlf)
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.png binary

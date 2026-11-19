@@ -5,7 +5,7 @@
   {
    "id": 1,
    "type": "UNETLoader",
-   "title": "Load Qwen-Image-Edit-2511",
+   "title": "Load Qwen-Image-Edit-2511 (fp8)",
    "pos": [
     60,
     100
@@ -39,7 +39,7 @@
   {
    "id": 2,
    "type": "CLIPLoader",
-   "title": "Load text encoder",
+   "title": "Load text encoder (fp8)",
    "pos": [
     60,
     276
@@ -2900,7 +2900,7 @@
  ],
  "groups": [
   {
-   "title": "Models (Qwen-Image-Edit-2511 + Lightning 4-step)",
+   "title": "Models (Qwen-Image-Edit-2511 fp8 + Lightning 4-step)",
    "bounding": [
     30,
     40,
