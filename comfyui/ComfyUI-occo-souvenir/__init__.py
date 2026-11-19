@@ -9,11 +9,14 @@ import os
 import sys
 from pathlib import Path
 
-_here = Path(__file__).resolve().parent
-for candidate in (os.environ.get("OCCO_SOUVENIR_SRC"), str(_here.parent.parent / "src")):
-    if candidate and Path(candidate, "souvenir").is_dir() and candidate not in sys.path:
-        sys.path.insert(0, candidate)
-        break
+try:  # normal case: `pip install -e <repo>` into ComfyUI's Python (comfyui/install.sh does this)
+    import souvenir  # noqa: F401
+except ImportError:  # fallback: repo src next to this folder (symlink/junction installs) or OCCO_SOUVENIR_SRC
+    _here = Path(__file__).resolve().parent
+    for candidate in (os.environ.get("OCCO_SOUVENIR_SRC"), str(_here.parent.parent / "src")):
+        if candidate and Path(candidate, "souvenir").is_dir() and candidate not in sys.path:
+            sys.path.insert(0, candidate)
+            break
 
 from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS  # noqa: E402
 

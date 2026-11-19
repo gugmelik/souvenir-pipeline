@@ -28,12 +28,14 @@ The workflow is grouped into bands:
 
 ```bash
 source ~/ComfyUI/.venv/bin/activate            # the Python that runs ComfyUI
-bash comfyui/install.sh ~/ComfyUI --models bf16  # links the nodes, installs packages, downloads bf16 models
+bash comfyui/install.sh ~/ComfyUI --models bf16  # installs the package + nodes, downloads bf16 models, self-tests
 # --models fp8 for the smaller files, --models none to skip downloads; --no-face / --no-rembg to skip those packages
 ```
 
 Then restart ComfyUI and open `comfyui/workflows/occo_souvenir_slotzilla_bf16.json`.
-The nodes are a symlink into this repo, so a later `git pull` + ComfyUI restart updates them.
+The pipeline code is installed editable (`pip install -e`), and the node folder is copied into `custom_nodes`.
+After `git pull`, re-run `bash comfyui/install.sh ~/ComfyUI --models none` and restart ComfyUI.
+The script ends with a self-test that loads the nodes the way ComfyUI does. It prints `OK` or the exact import error.
 
 ## Install on Windows
 
