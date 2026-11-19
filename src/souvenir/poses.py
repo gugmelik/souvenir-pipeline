@@ -18,14 +18,18 @@ COLORS = {
     "leg_r": (0, 255, 170),
     "leg_l": (0, 170, 255),
     "head": (255, 0, 85),
+    "foot": (0, 60, 255),
 }
 
 BASE = {
     "head": (760, 330),
     "neck": (700, 352),
     "hip": (430, 382),
-    "knee_r": (300, 358), "ankle_r": (165, 388),
-    "knee_l": (305, 400), "ankle_l": (172, 426),
+    "knee_r": (300, 395), "ankle_r": (178, 440),
+    "knee_l": (308, 425), "ankle_l": (190, 470),
+    # feet point straight down toward the ground
+    "toe_r": (160, 512),
+    "toe_l": (204, 545),
 }
 
 ARMS = {
@@ -35,9 +39,9 @@ ARMS = {
 }
 
 LABELS = {
-    "prone_superman": "prone flying pose, body horizontal, arms stretched forward",
-    "prone_celebrate": "prone flying pose, body horizontal, arms raised in a cheer",
-    "prone_point": "prone flying pose, one arm forward, one arm pointing to the side",
+    "prone_superman": "prone flying pose, chest down, feet pointing down, arms stretched forward",
+    "prone_celebrate": "prone flying pose, chest down, feet pointing down, arms raised in a cheer",
+    "prone_point": "prone flying pose, chest down, feet pointing down, one arm forward, one to the side",
 }
 
 
@@ -58,11 +62,13 @@ def draw_pose(name: str, size: tuple[int, int] = (1024, 768)) -> Image.Image:
 
     limb("hip", "knee_l", COLORS["leg_l"])
     limb("knee_l", "ankle_l", COLORS["leg_l"])
+    limb("ankle_l", "toe_l", COLORS["foot"])
     limb("neck", "elbow_l", COLORS["arm_l"])
     limb("elbow_l", "wrist_l", COLORS["arm_l"])
     limb("neck", "hip", COLORS["torso"])
     limb("hip", "knee_r", COLORS["leg_r"])
     limb("knee_r", "ankle_r", COLORS["leg_r"])
+    limb("ankle_r", "toe_r", COLORS["foot"])
     limb("neck", "elbow_r", COLORS["arm_r"])
     limb("elbow_r", "wrist_r", COLORS["arm_r"])
     hx, hy = pts["head"]

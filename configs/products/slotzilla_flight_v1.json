@@ -10,8 +10,8 @@
     "assets/style_refs/slotzilla_style_*.png"
   ],
   "character_style_refs": [],
-  "style_description": "bold-outline 2D cartoon illustration with cel shading, expressive faces with big eyes, saturated neon purple, pink and gold night palette, clean lines suitable for merchandise",
-  "character_style_description": "bold black ink outlines of varying weight, cel shading with two or three flat tones, slightly exaggerated caricature proportions, big round expressive eyes with white highlights, defined eyebrows, wide open-mouth grin, large expressive hands, hair as chunky flowing strands with highlights, clothes in flat colors with simple folds",
+  "style_description": "semi-realistic illustrated look with soft painterly shading, thin clean outlines, saturated neon purple, pink and gold night palette, polished enough for merchandise",
+  "character_style_description": "high-detail semi-realistic illustration with realistic body proportions and facial anatomy, only gently stylized features (slightly larger eyes, smooth skin), soft painterly shading with real light and shadow, subtle rim light, detailed individual hair strands, visible fabric texture and natural folds, thin clean outlines",
   "background_plates": [
     "assets/plates/approved/slotzilla_*.png"
   ],
@@ -57,11 +57,11 @@
   "cable_direction": "upper_left_to_lower_right",
   "cable_angle_deg": 22,
   "templates": {
-    "pose": "Show exactly one person: the person from image 1, lying horizontally in a zipline harness, flying face down and forward. Image 2 is only a pose diagram; copy its body position: {arms}, legs extended behind with knees slightly bent. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
-    "stylize": "Redraw the person from image 1 as a full-body cartoon character in this style: {character_style}. Take only colors and lighting from image 2. Show exactly one person: the person from image 1, with the same face, {clothing}, and {hair}, in the same flying pose. {expression}. Plain light background.",
+    "pose": "Show exactly one person: the person from image 1, flying through the air in a zipline harness, body horizontal, chest and stomach facing the ground, back facing up toward the cable, the harness strap attached at the middle of the back. Head raised, looking forward. Image 2 is only a pose diagram; copy its body position: {arms}, legs extended behind and hanging slightly lower than the hips, feet pointing straight down toward the ground. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
+    "stylize": "Redraw the person from image 1 in this style: {character_style}. Take only colors and lighting from image 2. Show exactly one person: the person from image 1, with the same face, {clothing}, and {hair}, in exactly the same pose: chest facing the ground, head raised, feet pointing down. {expression}. Plain light background.",
     "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. The image shows exactly {riders}, the only {people} in the picture; keep every rider's face, pose and clothing the same.",
     "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. The image shows exactly {riders}, the only {people} in the picture; keep them and their faces sharp and the same.",
-    "pose_check_question": "Is the person lying horizontally, face down and forward, in a flying pose?"
+    "pose_check_question": "Is the person flying horizontally with the chest facing the ground, head raised looking forward, and feet pointing down toward the ground?"
   },
   "required_text": [
     "Las Vegas 2026"
