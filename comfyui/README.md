@@ -117,6 +117,17 @@ Change **seed** on **Plan** (or on the core KSamplers) to try variations.
   riders** (pose step), **Stylized riders** (stylize step), or merch/hero (the harmonize/effects passes redraw the
   whole picture). **Verify report** flags a rider count that doesn't match.
 
+## VLM on the same pod (optional, recommended)
+
+```bash
+bash comfyui/start_vlm.sh          # first run installs vLLM in /workspace/vllm-venv, then serves Qwen3-VL-8B on 127.0.0.1:8100
+```
+Start it **before** ComfyUI. It takes `VLM_GPU_FRACTION` (default 0.25, about 24 GB of a 96 GB card); the bf16
+Qwen-Image-Edit uses about 40 GB. The workflows already point at `http://127.0.0.1:8100/v1`
+(`vlm_base_url` on Detect people / Plan / Verify). If the VLM isn't running, those nodes fall back within
+seconds to generic wording, template prompts and "?" checks. Stop it with `bash comfyui/start_vlm.sh stop`.
+Log: `/workspace/vllm.log`.
+
 ## Where it can run
 
 - **Local ComfyUI, or a ComfyUI pod you control** (RunPod / Vast instance): yes, install the nodes as above.

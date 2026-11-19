@@ -58,10 +58,12 @@ class OpenAICompatibleVLM:
         image_max_side: int = 1024,
         json_mode: bool = True,
         timeout_s: float = 120,
+        max_retries: int = 1,
     ):
         from openai import OpenAI  # optional dependency: pip install .[vlm]
 
-        self.client = OpenAI(base_url=base_url, api_key=api_key or "EMPTY", timeout=timeout_s)
+        # few retries: if the VLM is not running, callers fall back quickly (generic wording / template plan / "?")
+        self.client = OpenAI(base_url=base_url, api_key=api_key or "EMPTY", timeout=timeout_s, max_retries=max_retries)
         self.model = model
         self.name = f"openai:{model}"
         self.temperature = temperature

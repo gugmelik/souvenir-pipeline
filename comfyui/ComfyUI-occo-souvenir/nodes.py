@@ -81,7 +81,7 @@ def _vlm(base_url: str, model: str, api_key: str):
 
 
 VLM_INPUTS = {
-    "vlm_base_url": ("STRING", {"default": "", "tooltip": "OpenAI-compatible endpoint, e.g. http://host:8000/v1 (vLLM + Qwen3-VL). Empty = no VLM."}),
+    "vlm_base_url": ("STRING", {"default": "http://127.0.0.1:8100/v1", "tooltip": "OpenAI-compatible endpoint (comfyui/start_vlm.sh starts Qwen3-VL on port 8100). Empty = no VLM; if it is not reachable, nodes fall back to generic wording / templates."}),
     "vlm_model": ("STRING", {"default": "Qwen/Qwen3-VL-8B-Instruct"}),
     "vlm_api_key": ("STRING", {"default": "EMPTY"}),
 }

@@ -445,7 +445,7 @@
     0.35,
     "",
     "us-west-2",
-    "",
+    "http://127.0.0.1:8100/v1",
     "Qwen/Qwen3-VL-8B-Instruct",
     "EMPTY"
    ]
@@ -590,7 +590,7 @@
     "fixed",
     "template",
     180,
-    "",
+    "http://127.0.0.1:8100/v1",
     "Qwen/Qwen3-VL-8B-Instruct",
     "EMPTY"
    ]
@@ -2240,7 +2240,7 @@
    "widgets_values": [
     "insightface",
     0.3,
-    "",
+    "http://127.0.0.1:8100/v1",
     "Qwen/Qwen3-VL-8B-Instruct",
     "EMPTY"
    ]

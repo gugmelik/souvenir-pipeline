@@ -29,7 +29,7 @@ MODELS = {
     "vae": "qwen_image_vae.safetensors",
     "lora": "Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors",
 }
-VLM = {"vlm_base_url": "", "vlm_model": "Qwen/Qwen3-VL-8B-Instruct", "vlm_api_key": "EMPTY"}
+VLM = {"vlm_base_url": "http://127.0.0.1:8100/v1", "vlm_model": "Qwen/Qwen3-VL-8B-Instruct", "vlm_api_key": "EMPTY"}  # comfyui/start_vlm.sh
 
 
 # --------------------------------------------------------------------------- API graph
