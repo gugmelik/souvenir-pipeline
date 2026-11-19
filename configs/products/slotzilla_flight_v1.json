@@ -11,7 +11,7 @@
   ],
   "character_style_refs": [],
   "style_description": "semi-realistic illustrated look with soft painterly shading, thin clean outlines, saturated neon purple, pink and gold night palette, polished enough for merchandise",
-  "character_style_description": "high-detail semi-realistic illustration with realistic body proportions and facial anatomy, only gently stylized features (slightly larger eyes, smooth skin), soft painterly shading with real light and shadow, subtle rim light, detailed individual hair strands, visible fabric texture and natural folds, thin clean outlines",
+  "character_style_description": "semi-realistic illustration with realistic proportions and facial anatomy, soft painterly shading with real light and shadow, subtle rim light, detailed hair strands, visible fabric folds, thin clean outlines",
   "background_plates": [
     "assets/plates/approved/slotzilla_*.png"
   ],
@@ -58,7 +58,7 @@
   "cable_angle_deg": 22,
   "templates": {
     "pose": "Show exactly one person: the person from image 1, flying through the air in a zipline harness, body horizontal, chest and stomach facing the ground, back facing up toward the cable, the harness strap attached at the middle of the back. Head raised, looking forward. Image 2 is only a pose diagram; copy its body position: {arms}, legs extended behind and hanging slightly lower than the hips, feet pointing straight down toward the ground. Keep the same face, {clothing}, and {hair}, now swept back by the wind. {accessories} Plain light background.",
-    "stylize": "Redraw the person from image 1 in this style: {character_style}. Take only colors and lighting from image 2. Show exactly one person: the person from image 1, with the same face, {clothing}, and {hair}, in exactly the same pose: chest facing the ground, head raised, feet pointing down. {expression}. Plain light background.",
+    "stylize": "Turn the photo in image 1 into an illustration in this style: {character_style}. It must stay the same recognizable person: keep the exact face shape, eyes, eyebrows, nose, mouth, smile, skin tone and age, the same {hair} and {clothing}. Change only the drawing style, not the person. Keep the same pose: chest facing the ground, head raised, feet pointing down. Take only colors and lighting from image 2. Show exactly one person. Plain light background.",
     "harmonize": "Blend the riders into the neon night scene: match their lighting and colors to the scene, add soft pink and gold rim light from the signs below, and make each harness hang naturally from its own cable. The image shows exactly {riders}, the only {people} in the picture; keep every rider's face, pose and clothing the same.",
     "effects": "Add cinematic speed: speed lines and wind streaks trailing from hands and feet, rippling clothing, and motion blur on the background lights. The image shows exactly {riders}, the only {people} in the picture; keep them and their faces sharp and the same.",
     "pose_check_question": "Is the person flying horizontally with the chest facing the ground, head raised looking forward, and feet pointing down toward the ground?"
